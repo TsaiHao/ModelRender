@@ -57,5 +57,7 @@ void testObjLoader(const std::string &objFile) {
 int main(int argc, char **argv) {
     testObjLoader("../resource/cube.obj");
 
+    float t[] = {1, 2, 3};
+    cout << sizeof(t) << endl;
     return 0;
 }

@@ -13,12 +13,6 @@ using namespace std;
 #include "shader.h"
 #include "obj_loader.h"
 
-float vertices[] = {
-    -0.6f, -0.4f, 1.f, 0.f, 0.f ,
-    0.6f, -0.4f, 0.f, 1.f, 0.f ,
-    0.f,  0.6f, 0.f, 0.f, 1.f
-};
-
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
@@ -33,7 +27,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 int main(void)
 {
     GLFWwindow* window;
-    GLuint vertex_buffer;
 
     glfwSetErrorCallback(error_callback);
 
@@ -49,8 +42,7 @@ int main(void)
 #endif
 
     window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
-    if (!window)
-    {
+    if (!window) {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -60,26 +52,15 @@ int main(void)
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
-    GLuint VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    unsigned int indices[] = { 1, 2, 0 };
-    GLuint EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
     Shader shader("../resource/plain.vs", "../resource/plain.fs");
+    ObjLoader obj("../resource/cube.obj");
+    obj.render();
 
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 20, (void*)(0));
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 20, (void*)(sizeof(float) * 2));
-    glEnableVertexAttribArray(1);
+    glm::mat4 mvp(1.0f);
+    mvp = glm::scale(mvp, glm::vec3(0.5f, 0.5f, 0.5f));
+    mvp = glm::rotate(mvp, glm::radians(30.0f), glm::vec3(0.4f, 0.5f, 0.3f));
+    shader.use();
+    shader.setMat4("mvp", mvp);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -88,11 +69,10 @@ int main(void)
         glfwGetFramebufferSize(window, &width, &height);
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
-        glClearColor(0.3f, 0.4f, 0.3f, 1.0f);
+        glClearColor(0.f, 0.f, 0.f, 1.0f);
 
         shader.use();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+        obj.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

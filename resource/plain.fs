@@ -6,5 +6,5 @@ in vec3 vertNorm;
 out vec4 glColor;
 
 void main() {
-    glColor = vec4(0.8f, 0.9f, 1.0f, 1.0f);
+    glColor = vec4(0.8f, 0.6f, 0.7f, 1.0f);
 }

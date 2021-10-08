@@ -7,8 +7,10 @@ layout (location = 2) in vec3 norm;
 out vec3 texCoord;
 out vec3 vertNorm;
 
+uniform mat4 mvp;
+
 void main() {
-    gl_Position = pos;
+    gl_Position = mvp * pos;
     texCoord = tex;
     vertNorm = norm;
 }

@@ -156,18 +156,15 @@ void ObjLoader::render() {
     vector<float> vertData(vertices.size() * stride);
     for (int i = 0; i < vertices.size(); ++i) {
         auto vert = static_pointer_cast<ObjVertex>(vertices[i]);
-        auto tex = static_pointer_cast<ObjTextureCoordinate>(texCoords[i]);
-        auto norm = static_pointer_cast<ObjVertexNorm>(normVecs[i]);
-        
         copy(vert->point.begin(), vert->point.end(), vertData.begin() + stride * i);
-        copy(tex->coord.begin(), tex->coord.end(), vertData.begin() + stride * i + 4);
-        copy(norm->norm.begin(), norm->norm.end(), vertData.begin() + stride * i + 7);
     }
 
-    vector<int> indexData;    // unsigned int?
+    vector<unsigned int> indexData;    // unsigned int?
     for (int i = 0; i < faces.size(); ++i) {
         auto face = static_pointer_cast<ObjFace>(faces[i]);
-        copy(face->verts.begin(), face->verts.end(), back_inserter(indexData));
+        for (auto const& ind : face->verts) {
+            indexData.push_back(ind - 1);
+        }
     }
     triangleCount = indexData.size() / 3;
 
@@ -180,11 +177,11 @@ void ObjLoader::render() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, bufferSize, vertData.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, bufferSize, (void*)0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, bufferSize, (void*)4);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)4);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, bufferSize, (void*)(4 + 3));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(4 + 3));
     glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -193,5 +190,5 @@ void ObjLoader::render() {
 
 void ObjLoader::draw() const {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glDrawElements(GL_TRIANGLES, triangleCount, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, triangleCount * 3, GL_UNSIGNED_INT, 0);
 }
