@@ -15,4 +15,4 @@ add_executable(graphics ${SOURCE_FILE} glad/src/glad.c)
 
 add_executable(utest test/unit_test.cpp obj_loader.cpp shader.cpp cgutils.cpp glad/src/glad.c)
 
-target_link_libraries(graphics glfw)
+target_link_libraries(graphics glfw ${CMAKE_DL_LIBS})
