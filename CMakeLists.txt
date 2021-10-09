@@ -3,8 +3,8 @@ project(graphics)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_subdirectory(glfw-3.3.4)
-include_directories(glfw-3.3.4/include
+add_subdirectory(glfw)
+include_directories(glfw/include
                     glad/include
                     glm
                     ${CMAKE_SOURCE_DIR})
