@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.12)
 project(graphics)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -16,3 +16,4 @@ add_executable(graphics ${SOURCE_FILE} glad/src/glad.c)
 add_executable(utest test/unit_test.cpp obj_loader.cpp shader.cpp cgutils.cpp glad/src/glad.c)
 
 target_link_libraries(graphics glfw ${CMAKE_DL_LIBS})
+target_link_libraries(utest ${CMAKE_DL_LIBS})
