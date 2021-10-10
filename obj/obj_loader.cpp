@@ -124,23 +124,31 @@ ObjLoader::ObjLoader(const std::string& file) {
     while (getline(ifs, line)) {
         string token = line.substr(0, line.find(" "));
         if (token == "v") {
-            shared_ptr<ObjBase> vert = make_shared<ObjVertex>();
-            vert->parseObjLine(line);
+            auto vert = ObjVertex();
+            vert.parseObjLine(line);
             vertices.push_back(vert);
         } else if (token == "vt") {
-            shared_ptr<ObjBase> tex = make_shared<ObjTextureCoordinate>();
-            tex->parseObjLine(line);
+            auto tex = ObjTextureCoordinate();
+            tex.parseObjLine(line);
             texCoords.push_back(tex);
         } else if (token == "vn") {
-            shared_ptr<ObjBase> norm = make_shared<ObjVertexNorm>();
-            norm->parseObjLine(line);
-            texCoords.push_back(norm);
+            auto norm = ObjVertexNorm();
+            norm.parseObjLine(line);
+            normVecs.push_back(norm);
         } else if (token == "f") {
-            shared_ptr<ObjBase> face = make_shared<ObjFace>();
-            face->parseObjLine(line);
+            auto face = ObjFace();
+            face.parseObjLine(line);
             faces.push_back(face);
         } else if (token == "#") {
             continue;
+        } else if (token == "s") {
+
+        } else if (token == "o") {
+            auto words = splitString(line, " ");
+            objName = words[1];
+        } else if (token == "usemtl") {
+            auto words = splitString(line, " ");
+            material = words[1];
         } else {
             Logger::error("obj load, token not known: "s + token);
         }
@@ -155,14 +163,14 @@ void ObjLoader::render() {
     const int stride = 4 + 3 + 3;
     vector<float> vertData(vertices.size() * stride);
     for (int i = 0; i < vertices.size(); ++i) {
-        auto vert = static_pointer_cast<ObjVertex>(vertices[i]);
-        copy(vert->point.begin(), vert->point.end(), vertData.begin() + stride * i);
+        auto vert = vertices[i];
+        copy(vert.point.begin(), vert.point.end(), vertData.begin() + stride * i);
     }
 
     vector<unsigned int> indexData;    // unsigned int?
     for (int i = 0; i < faces.size(); ++i) {
-        auto face = static_pointer_cast<ObjFace>(faces[i]);
-        for (auto const& ind : face->verts) {
+        auto face = faces[i];
+        for (auto const& ind : face.verts) {
             indexData.push_back(ind - 1);
         }
     }

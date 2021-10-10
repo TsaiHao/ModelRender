@@ -42,6 +42,7 @@ struct ObjFace: public ObjBase {
     ObjFace() = default;
     void parseObjLine(const std::string& line) override; 
     void parseObjWord(const std::string& word);
+    void bufferToVertices(std::vector<float> &data);
 
     std::vector<int> verts;
     std::vector<int> texs;
@@ -56,10 +57,12 @@ public:
     void draw() const;
 
     std::string mtllib;
-    std::vector<basep> vertices;
-    std::vector<basep> texCoords;
-    std::vector<basep> normVecs;
-    std::vector<basep> faces;
+    std::string objName;
+    std::string material;
+    std::vector<ObjVertex> vertices;
+    std::vector<ObjTextureCoordinate> texCoords;
+    std::vector<ObjVertexNorm> normVecs;
+    std::vector<ObjFace> faces;
 
     // render
     GLuint VAO, VBO, EBO;
