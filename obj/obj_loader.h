@@ -50,11 +50,8 @@ struct ObjFace: public ObjBase {
 };
 
 class ObjLoader {
-    using basep = std::shared_ptr<ObjBase>;
 public:
     explicit ObjLoader(const std::string& file);
-    void render();
-    void draw() const;
 
     std::string mtllib;
     std::string objName;
@@ -63,8 +60,4 @@ public:
     std::vector<ObjTextureCoordinate> texCoords;
     std::vector<ObjVertexNorm> normVecs;
     std::vector<ObjFace> faces;
-
-    // render
-    GLuint VAO, VBO, EBO;
-    int triangleCount;
 };

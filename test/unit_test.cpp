@@ -2,16 +2,17 @@
 #include <vector>
 #include <iterator>
 #include <string>
+#include <array>
 
 #include "obj_loader.h"
 #include "cgutils.h"
 
+#define TEST_PRINT cout << "-----------------TEST-----------------" << endl; \
+                   cout << "test function " << __FUNCTION__ << endl;
+
 using namespace std;
 
 void testSingleStringSplit(const string &str, const string &del) {
-    cout << "----------------TEST------------------" << endl;
-    cout << "stringSplit\n input: " << str << endl << " delimiter: " << del << endl << endl;
-
     auto res = splitString(str, del);
     for (auto const& r : res) {
         cout << " substr: " << r << ", size: " << r.size() << endl;
@@ -19,6 +20,8 @@ void testSingleStringSplit(const string &str, const string &del) {
 }
 
 void testStringSpilt() {
+    TEST_PRINT
+
     testSingleStringSplit("this is a test string\n", " ");
 
     testSingleStringSplit("this is a test string ", " ");
@@ -37,27 +40,36 @@ void testStringSpilt() {
 }
 
 void testObjLoader(const std::string &objFile) {
-    cout << "----------------TEST------------------" << endl;
-    cout << "test obj file loader file: " << objFile << endl;
+    TEST_PRINT
 
     ObjLoader obj(objFile);
 
     cout << "obj vertices get " << obj.vertices.size() << endl;
     cout << "vertices list: " << endl;
     for (int i = 0; i < obj.vertices.size(); ++i) {
-        auto const& vert = static_pointer_cast<ObjVertex>(obj.vertices[i]);
+        auto const& vert = obj.vertices[i];
         cout << " vertex " << i << ": ";
         for (int j = 0; j < 4; ++j) {
-            cout << vert->point[j] << " ";
+            cout << vert.point[j] << " ";
         }
         cout << endl;
     }    
 }
 
-int main(int argc, char **argv) {
-    testObjLoader("../resource/cube.obj");
+void testPushVector() {
+    vector<int> nums{1, 2, 3};
+    array<int, 3> nums2{4, 5, 6};
+    pushVector(nums, nums2);
 
-    float t[] = {1, 2, 3};
-    cout << sizeof(t) << endl;
+    TEST_PRINT
+    cout << "nums : " << endl;
+    for (auto const &n : nums) {
+        cout << n << '\t';
+    }
+    cout << endl;
+}
+
+int main(int argc, char **argv) {
+    testPushVector();
     return 0;
 }

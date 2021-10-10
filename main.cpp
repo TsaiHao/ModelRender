@@ -12,6 +12,7 @@ using namespace std;
 
 #include "shader.h"
 #include "obj_loader.h"
+#include "obj_render.h"
 
 static void error_callback(int error, const char* description)
 {
@@ -53,8 +54,9 @@ int main(void)
     gladLoadGL();
 
     Shader shader("../resource/plain.vs", "../resource/plain.fs");
-    ObjLoader obj("../resource/cube.obj");
-    obj.render();
+    std::shared_ptr<ObjLoader> obj = make_shared<ObjLoader>("../resource/cube.obj");
+    ObjRender render(obj);
+    render.bufferData();
 
     glm::mat4 mvp(1.0f);
     mvp = glm::scale(mvp, glm::vec3(0.5f, 0.5f, 0.5f));
@@ -72,7 +74,7 @@ int main(void)
         glClearColor(0.f, 0.f, 0.f, 1.0f);
 
         shader.use();
-        obj.draw();
+        render.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
