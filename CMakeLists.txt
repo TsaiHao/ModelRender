@@ -11,9 +11,13 @@ include_directories(glfw/include
                     utils
                     ${CMAKE_SOURCE_DIR})
 
-aux_source_directory(obj OBJ_SOURCE_FILES)
+set(OBJ_SOURCE_FILES
+        obj/obj_render.cpp
+        obj/obj_loader.cpp)
+set(UTIL_SOURCE_FILES
+        utils/cgutils.cpp
+        utils/shader.cpp)
 set(GLAD_SOURCE_FILE glad/src/glad.c)
-aux_source_directory(utils UTIL_SOURCE_FILES)
 
 add_executable(graphics main.cpp ${GLAD_SOURCE_FILE} ${UTIL_SOURCE_FILES} ${OBJ_SOURCE_FILES})
 
