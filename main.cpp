@@ -53,8 +53,8 @@ int main(void)
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
-    Shader shader("../resource/plain.vs", "../resource/plain.fs");
-    std::shared_ptr<ObjLoader> obj = make_shared<ObjLoader>("../resource/cube.obj");
+    Shader shader("resource/plain.vs", "resource/plain.fs");
+    std::shared_ptr<ObjLoader> obj = make_shared<ObjLoader>("resource/cube.obj");
     ObjRender render(obj);
     render.bufferData();
 

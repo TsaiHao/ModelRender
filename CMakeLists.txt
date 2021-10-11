@@ -21,3 +21,5 @@ add_executable(utest test/unit_test.cpp ${GLAD_SOURCE_FILE} ${UTIL_SOURCE_FILES}
 
 target_link_libraries(graphics glfw ${CMAKE_DL_LIBS})
 target_link_libraries(utest ${CMAKE_DL_LIBS})
+
+file(COPY resource DESTINATION .)
