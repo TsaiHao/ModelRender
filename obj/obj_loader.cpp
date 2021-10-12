@@ -96,16 +96,16 @@ void ObjFace::parseObjLine(const std::string& line) {
 void ObjFace::parseObjWord(const std::string& word) {
     auto nums = splitString(word, "/");
 
-    int v = stof(nums[0]);
+    int v = stof(nums[0]) - 1;
 
     int vt = 0;
     if (nums.size() > 1 && !nums[1].empty()) {
-        vt = stof(nums[1]);
+        vt = stof(nums[1]) - 1;
     }
 
     int vn = 0;
     if (nums.size() > 2 && !nums[2].empty()) {
-        vn = stof(nums[2]);
+        vn = stof(nums[2]) - 1;
     }
 
     verts.push_back(v);

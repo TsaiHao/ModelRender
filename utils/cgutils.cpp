@@ -30,7 +30,7 @@ std::vector<std::string> splitString(const std::string &str, const std::string &
     do {
         right = str.find(del, left);
         if (right == string::npos) {
-            if (left < str.size() - 1) {
+            if (left < str.size()) {
                 res.push_back(str.substr(left, str.size() - left));
             }
             break;

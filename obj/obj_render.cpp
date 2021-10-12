@@ -12,22 +12,22 @@ void ObjRender::bufferData() {
     vertices.reserve(100);
 
     for (auto const& face : obj->faces) {
-        ObjVertex const& vert0 = obj->vertices[face.verts[0] - 1];
-        ObjTextureCoordinate const& tex0 = obj->texCoords[face.texs[0] - 1];
-        ObjVertexNorm const& norm0 = obj->normVecs[face.norms[0] - 1];
+        ObjVertex const& vert0 = obj->vertices[face.verts[0]];
+        ObjTextureCoordinate const& tex0 = obj->texCoords[face.texs[0]];
+        ObjVertexNorm const& norm0 = obj->normVecs[face.norms[0]];
 
         for (int i = 1; i < face.verts.size() - 1; ++i) {
             pushVector(vertices, vert0.point);
             pushVector(vertices, tex0.coord);
             pushVector(vertices, norm0.norm);
 
-            ObjVertex const& vert1 = obj->vertices[face.verts[i] - 1];
-            ObjTextureCoordinate const& tex1 = obj->texCoords[face.texs[i] - 1];
-            ObjVertexNorm const& norm1 = obj->normVecs[face.norms[i] - 1];
+            ObjVertex const& vert1 = obj->vertices[face.verts[i]];
+            ObjTextureCoordinate const& tex1 = obj->texCoords[face.texs[i]];
+            ObjVertexNorm const& norm1 = obj->normVecs[face.norms[i]];
 
-            ObjVertex const& vert2 = obj->vertices[face.verts[i + 1] - 1];
-            ObjTextureCoordinate const& tex2 = obj->texCoords[face.texs[i + 1] - 1];
-            ObjVertexNorm const& norm2 = obj->normVecs[face.norms[i + 1] - 1];
+            ObjVertex const& vert2 = obj->vertices[face.verts[i + 1]];
+            ObjTextureCoordinate const& tex2 = obj->texCoords[face.texs[i + 1]];
+            ObjVertexNorm const& norm2 = obj->normVecs[face.norms[i + 1]];
 
             pushVector(vertices, vert1.point);
             pushVector(vertices, tex1.coord);
