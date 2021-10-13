@@ -60,7 +60,6 @@ int main(void)
 
     glm::mat4 mvp(1.0f);
     mvp = glm::scale(mvp, glm::vec3(0.5f, 0.5f, 0.5f));
-    mvp = glm::rotate(mvp, glm::radians(30.0f), glm::vec3(0.4f, 0.5f, 0.3f));
     shader.use();
     shader.setMat4("mvp", mvp);
 
@@ -73,7 +72,11 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.f, 0.f, 0.f, 1.0f);
 
+        float angle = glfwGetTime();
+        mvp = glm::rotate(mvp, glm::radians(angle) * 0.1f, glm::vec3(0.4f, 0.5f, 0.3f));
+
         shader.use();
+        shader.setMat4("mvp", mvp);
         render.draw();
 
         glfwSwapBuffers(window);
