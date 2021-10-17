@@ -54,7 +54,7 @@ int main(void)
     gladLoadGL();
 
     Shader shader("resource/plain.vs", "resource/plain.fs");
-    std::shared_ptr<ObjLoader> obj = make_shared<ObjLoader>("resource/cube.obj");
+    std::shared_ptr<ObjLoader> obj = make_shared<ObjLoader>("resource/cylinder.obj");
     ObjRender render(obj);
     render.bufferData();
 

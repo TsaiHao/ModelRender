@@ -2,6 +2,12 @@
 
 using namespace std;
 
+struct strFinder {
+    bool operator()(const char ch) const {
+        return (ch <= '9' && ch >= '0') || (ch <= 'z' && ch >= 'a') || (ch <= 'Z' && ch >= 'A');
+    }
+};
+
 std::string readTextFile(const std::string &file) {
     std::ifstream ifs(file);
     if (!ifs) {
@@ -19,7 +25,17 @@ std::string readTextFile(const std::string &file) {
     return buffer;
 }
 
-std::vector<std::string> splitString(const std::string &str, const std::string &del) {
+std::string stripString(const std::string& str) {
+    strFinder finder;
+    auto left = find_if(str.begin(), str.end(), finder);
+    auto right = find_if(str.rbegin(), str.rend(), finder);
+    if (left == str.end()) {
+        return "";
+    }
+    return string(left, right.base());
+}
+
+std::vector<std::string> splitString(const std::string &str, const std::string &del, bool discardSpace /* = false */) {
     vector<string> res;
     if (str.empty()) {
         return res;
@@ -27,17 +43,27 @@ std::vector<std::string> splitString(const std::string &str, const std::string &
 
     int left = 0;
     int right = str.size() - 1;
-    do {
+    while (1) {
         right = str.find(del, left);
         if (right == string::npos) {
             if (left < str.size()) {
-                res.push_back(str.substr(left, str.size() - left));
+                auto substr = str.substr(left, str.size() - left);
+                if (discardSpace) {
+                    substr = stripString(substr);
+                    if (substr.size() != 0) {
+                        res.push_back(substr);
+                    }
+                }
             }
             break;
         }
-        res.push_back(str.substr(left, right - left));
+        auto substr = str.substr(left, right - left);
+        substr = stripString(substr);
+        if (substr.size() > 0) {
+            res.push_back(substr);
+        }
         left = right + del.size();
-    } while (1);
+    }
 
     return res;
 }

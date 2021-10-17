@@ -11,7 +11,9 @@
 
 std::string readTextFile(const std::string &file); 
 
-std::vector<std::string> splitString(const std::string &str, const std::string &del);
+std::string stripString(const std::string& str);
+
+std::vector<std::string> splitString(const std::string &str, const std::string &del, bool discardSpace = true);
 
 template <typename Container1, typename Container2>
 void pushVector(Container1& target, const Container2 &source) {

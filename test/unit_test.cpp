@@ -13,16 +13,18 @@
 using namespace std;
 
 void testSingleStringSplit(const string &str, const string &del) {
-    auto res = splitString(str, del);
+    auto res = splitString(str, del, true);
+    cout << "test string: " << str << endl;
     for (auto const& r : res) {
         cout << " substr: " << r << ", size: " << r.size() << endl;
     }
+    cout << endl;
 }
 
 void testStringSpilt() {
     TEST_PRINT
 
-    testSingleStringSplit("this is a test string\n", " ");
+    testSingleStringSplit("this  is a test string\n", " ");
 
     testSingleStringSplit("this is a test string ", " ");
 
@@ -70,6 +72,6 @@ void testPushVector() {
 }
 
 int main(int argc, char **argv) {
-    testPushVector();
+    testStringSpilt();
     return 0;
 }

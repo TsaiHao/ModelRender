@@ -148,7 +148,10 @@ ObjLoader::ObjLoader(const std::string& file) {
             objName = words[1];
         } else if (token == "usemtl") {
             auto words = splitString(line, " ");
-            material = words[1];
+            materialName = words[1];
+        } else if (token == "mtllib") {
+            auto words = splitString(line, " ");
+            materialFile = words[1];
         } else {
             Logger::error("obj load, token not known: "s + token);
         }

@@ -55,7 +55,8 @@ public:
 
     std::string mtllib;
     std::string objName;
-    std::string material;
+    std::string materialName;
+    std::string materialFile;
     std::vector<ObjVertex> vertices;
     std::vector<ObjTextureCoordinate> texCoords;
     std::vector<ObjVertexNorm> normVecs;
