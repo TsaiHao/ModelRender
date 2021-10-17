@@ -23,6 +23,8 @@ void ObjRender::bufferData() {
         }
     }
 
+    printVertices("verts.txt", vertices, 10);
+    
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
