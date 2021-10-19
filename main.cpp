@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 {
     GLFWwindow* window = glWindowInit();
 
-    Shader shader("resource/plain.vs", "resource/plain.fs");
+    Shader shader("resource/light.vs", "resource/light.fs");
     std::shared_ptr<ObjLoader> obj = make_shared<ObjLoader>("resource/cylinder.obj");
     ObjRender render(obj);
     render.bufferData();
@@ -28,9 +28,8 @@ int main(int argc, char **argv)
     mvp = glm::scale(mvp, glm::vec3(0.5f, 0.5f, 0.5f));
     shader.use();
     shader.setMat4("mvp", mvp);
-
-    glViewport(0, 0, 1500.0, 1500.0);
-    const int wave = 500;
+    glm::vec3 lightPos(0, 0, 0);
+    shader.setFloatVec3("lightPos", lightPos);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -38,12 +37,10 @@ int main(int argc, char **argv)
         glClearColor(0.f, 0.f, 0.f, 1.0f);
 
         float angle = glfwGetTime();
-        const int portSize = sin(angle * 0.2) * wave + GL_WINDOW_WIDTH;
-        glViewport(0, 0, portSize, portSize);
         auto trans = glm::rotate(mvp, glm::radians(angle) * 10.0f, glm::vec3(0.4f, 0.5f, 0.3f));
 
         shader.use();
-        shader.setMat4("mvp", trans );
+        shader.setMat4("mvp", trans);
         render.draw();
 
         glfwSwapBuffers(window);
