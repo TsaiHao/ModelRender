@@ -29,16 +29,21 @@ int main(int argc, char **argv)
     shader.use();
     shader.setMat4("mvp", mvp);
 
+    glViewport(0, 0, 1500.0, 1500.0);
+    const int wave = 500;
+
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.f, 0.f, 0.f, 1.0f);
 
         float angle = glfwGetTime();
-        mvp = glm::rotate(mvp, glm::radians(angle) * 0.1f, glm::vec3(0.4f, 0.5f, 0.3f));
+        const int portSize = sin(angle * 0.2) * wave + GL_WINDOW_WIDTH;
+        glViewport(0, 0, portSize, portSize);
+        auto trans = glm::rotate(mvp, glm::radians(angle) * 10.0f, glm::vec3(0.4f, 0.5f, 0.3f));
 
         shader.use();
-        shader.setMat4("mvp", mvp);
+        shader.setMat4("mvp", trans );
         render.draw();
 
         glfwSwapBuffers(window);
