@@ -9,6 +9,8 @@
 
 #include "glad/glad.h"
 
+void glfwErrorCallback(int error, const char* description);
+
 std::string readTextFile(const std::string &file); 
 
 std::string stripString(const std::string& str);

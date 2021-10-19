@@ -4,9 +4,14 @@ using namespace std;
 
 struct strFinder {
     bool operator()(const char ch) const {
-        return (ch <= '9' && ch >= '0') || (ch <= 'z' && ch >= 'a') || (ch <= 'Z' && ch >= 'A');
+        return (ch <= '9' && ch >= '0') || (ch <= 'z' && ch >= 'a') || (ch <= 'Z' && ch >= 'A') || (ch == '-');
     }
 };
+
+void glfwErrorCallback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s\n", description);
+}
 
 std::string readTextFile(const std::string &file) {
     std::ifstream ifs(file);

@@ -13,11 +13,7 @@ using namespace std;
 #include "shader.h"
 #include "obj_loader.h"
 #include "obj_render.h"
-
-static void error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Error: %s\n", description);
-}
+#include "cgutils.h"
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -29,7 +25,7 @@ int main(void)
 {
     GLFWwindow* window;
 
-    glfwSetErrorCallback(error_callback);
+    glfwSetErrorCallback(glfwErrorCallback);
 
     if (!glfwInit())
         exit(EXIT_FAILURE);

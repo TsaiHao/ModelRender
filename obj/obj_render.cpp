@@ -14,12 +14,23 @@ void ObjRender::bufferData() {
     for (auto const& face : obj->faces) {
         for (int i = 0; i < face.verts.size(); ++i) {
             ObjVertex const& vert = obj->vertices[face.verts[i]];
-            ObjTextureCoordinate const& tex = obj->texCoords[face.texs[i]];
-            ObjVertexNorm const& norm = obj->normVecs[face.norms[i]];
-
             pushVector(vertices, vert.point);
-            pushVector(vertices, tex.coord);
-            pushVector(vertices, norm.norm);
+
+            if (obj->texCoords.empty()) {
+                pushVector(vertices, array<int, 3>({ 0, 0, 0 }));
+            }
+            else {
+                ObjTextureCoordinate const& tex = obj->texCoords[face.texs[i]];
+                pushVector(vertices, tex.coord);
+            }
+
+            if (obj->normVecs.empty()) {
+                pushVector(vertices, array<int, 3>({ 0, 0, 0 }));
+            }
+            else {
+                ObjVertexNorm const& norm = obj->normVecs[face.norms[i]];
+                pushVector(vertices, norm.norm);
+            }
         }
     }
 
