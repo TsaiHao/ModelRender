@@ -10,6 +10,7 @@
 class ObjRender {
 public:
     explicit ObjRender(std::shared_ptr<ObjLoader> loader);
+    explicit ObjRender(std::string const& objFile);
 
     void bufferData();
     void draw();

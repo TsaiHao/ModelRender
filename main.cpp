@@ -20,9 +20,7 @@ int main(int argc, char **argv)
     GLFWwindow* window = glWindowInit();
 
     Shader shader("resource/light.vs", "resource/light.fs");
-    std::shared_ptr<ObjLoader> obj = make_shared<ObjLoader>("resource/cylinder.obj");
-    ObjRender render(obj);
-    render.bufferData();
+    ObjRender render("resource/cylinder.obj");
 
     glm::mat4 mvp(1.0f);
     mvp = glm::scale(mvp, glm::vec3(0.5f, 0.5f, 0.5f));

@@ -4,7 +4,13 @@
 using namespace std;
 
 ObjRender::ObjRender(std::shared_ptr<ObjLoader> loader) : obj(loader) {
+    bufferData();
+}
 
+ObjRender::ObjRender(std::string const& objFile)
+{
+    obj = make_shared<ObjLoader>(objFile);
+    bufferData();
 }
 
 void ObjRender::bufferData() {
