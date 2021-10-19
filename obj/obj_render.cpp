@@ -7,10 +7,14 @@ ObjRender::ObjRender(std::shared_ptr<ObjLoader> loader) : obj(loader) {
     bufferData();
 }
 
-ObjRender::ObjRender(std::string const& objFile)
+ObjRender::ObjRender(std::string const& objFile, const std::string &vsFile, const std::string& fsFile)
 {
     obj = make_shared<ObjLoader>(objFile);
     bufferData();
+
+    if (!vsFile.empty() && !fsFile.empty()) {
+        attachShader(vsFile, fsFile);
+    }
 }
 
 void ObjRender::bufferData() {
@@ -62,7 +66,11 @@ void ObjRender::bufferData() {
 }
 
 void ObjRender::draw() {
+    _glCheckError();
+    shader.use();
+    _glCheckError();
     glBindVertexArray(VAO);
+    _glCheckError();
     int offset = 0;
 
     for (auto const& face : obj->faces) {
@@ -71,4 +79,14 @@ void ObjRender::draw() {
         offset += vertexCount;
     }
     _glCheckError();
+}
+
+void ObjRender::attachShader(const std::string& vsFile, const std::string& fsFile)
+{
+    shader = Shader(vsFile, fsFile);
+}
+
+Shader& ObjRender::getShader() 
+{
+    return shader;
 }

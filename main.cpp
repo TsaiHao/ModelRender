@@ -19,15 +19,20 @@ int main(int argc, char **argv)
 {
     GLFWwindow* window = glWindowInit();
 
-    Shader shader("resource/light.vs", "resource/light.fs");
-    ObjRender render("resource/cylinder.obj");
+    ObjRender render("resource/cylinder.obj", "resource/light.vs", "resource/light.fs");
+    ObjRender lightSource("resource/cube.obj", "resource/plain.vs", "resource/plain.fs");
 
+    render.getShader().use();
     glm::mat4 mvp(1.0f);
     mvp = glm::scale(mvp, glm::vec3(0.5f, 0.5f, 0.5f));
-    shader.use();
-    shader.setMat4("mvp", mvp);
+    render.getShader().setMat4("mvp", mvp);
     glm::vec3 lightPos(0, 0, 0);
-    shader.setFloatVec3("lightPos", lightPos);
+    render.getShader().setFloatVec3("lightPos", lightPos);
+
+    lightSource.getShader().use();
+    glm::mat4 lightMvp(1.0f);
+    lightMvp = glm::translate(lightMvp, glm::vec3(0.6f, 0.f, 0.5f));
+    lightSource.getShader().setMat4("mvp", lightMvp);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -37,9 +42,10 @@ int main(int argc, char **argv)
         float angle = glfwGetTime();
         auto trans = glm::rotate(mvp, glm::radians(angle) * 10.0f, glm::vec3(0.4f, 0.5f, 0.3f));
 
-        shader.use();
-        shader.setMat4("mvp", trans);
+        render.getShader().setMat4("mvp", trans);
         render.draw();
+        
+        lightSource.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

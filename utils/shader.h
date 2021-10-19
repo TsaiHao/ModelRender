@@ -6,7 +6,6 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-
 class Shader {
 public:
     Shader() = default;
@@ -46,7 +45,7 @@ public:
 
 private:
     void checkCompileErrors(unsigned int shader, std::string type) const;
-    GLuint getUniformLocation(const std::string &name) const;
+    GLint getUniformLocation(const std::string &name) const;
 
     GLuint vertShader;
     GLuint fragShader;

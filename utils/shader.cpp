@@ -60,8 +60,8 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type) const
     }
 }
 
-GLuint Shader::getUniformLocation(const std::string &name) const {
-    GLuint loc = glGetUniformLocation(program, name.c_str());
+GLint Shader::getUniformLocation(const std::string &name) const {
+    GLint loc = glGetUniformLocation(program, name.c_str());
     if (loc < 0) {
         cerr << "Error: get uniform location error: name: " << name << " loc: " << loc << endl;
     }
