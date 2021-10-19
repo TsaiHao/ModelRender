@@ -1,4 +1,5 @@
 #include "cgutils.h"
+#include "glfw/glfw3.h"
 
 using namespace std;
 
@@ -11,6 +12,43 @@ struct strFinder {
 void glfwErrorCallback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
+}
+
+void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+}
+
+GLFWwindow *glWindowInit()
+{
+    GLFWwindow* window;
+
+    glfwSetErrorCallback(glfwErrorCallback);
+
+    if (!glfwInit())
+        exit(EXIT_FAILURE);
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
+    window = glfwCreateWindow(GL_WINDOW_WIDTH, GL_WINDOW_HEIGHT, "Model Render", NULL, NULL);
+    if (!window) {
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
+
+    glfwSetKeyCallback(window, glfwKeyCallback);
+
+    glfwMakeContextCurrent(window);
+    gladLoadGL();
+
+    return window;
 }
 
 std::string readTextFile(const std::string &file) {

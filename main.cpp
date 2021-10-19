@@ -15,39 +15,9 @@ using namespace std;
 #include "obj_render.h"
 #include "cgutils.h"
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+int main(int argc, char **argv)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-}
-
-int main(void)
-{
-    GLFWwindow* window;
-
-    glfwSetErrorCallback(glfwErrorCallback);
-
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-    window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
-    if (!window) {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-
-    glfwSetKeyCallback(window, key_callback);
-
-    glfwMakeContextCurrent(window);
-    gladLoadGL();
+    GLFWwindow* window = glWindowInit();
 
     Shader shader("resource/plain.vs", "resource/plain.fs");
     std::shared_ptr<ObjLoader> obj = make_shared<ObjLoader>("resource/cylinder.obj");
@@ -61,10 +31,6 @@ int main(void)
 
     while (!glfwWindowShouldClose(window))
     {
-        int width, height;
-
-        glfwGetFramebufferSize(window, &width, &height);
-        glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.f, 0.f, 0.f, 1.0f);
 

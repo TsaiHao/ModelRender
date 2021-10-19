@@ -8,8 +8,16 @@
 #include <iterator>
 
 #include "glad/glad.h"
+#include "glfw/glfw3.h"
+
+#define GL_WINDOW_WIDTH (1500)
+#define GL_WINDOW_HEIGHT (1500)
 
 void glfwErrorCallback(int error, const char* description);
+
+void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+GLFWwindow *glWindowInit();
 
 std::string readTextFile(const std::string &file); 
 
