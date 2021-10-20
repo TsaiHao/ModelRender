@@ -42,6 +42,7 @@ int main(int argc, char **argv)
         float angle = glfwGetTime();
         auto trans = glm::rotate(mvp, glm::radians(angle) * 10.0f, glm::vec3(0.4f, 0.5f, 0.3f));
 
+        render.getShader().use();
         render.getShader().setMat4("mvp", trans);
         render.draw();
         

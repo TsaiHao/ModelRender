@@ -30,10 +30,11 @@ Shader::Shader(const string &vertFile, const string &fragFile) {
     glAttachShader(program, fragShader);
     glLinkProgram(program);
     checkCompileErrors(program, "PROGRAM");
+    _glCheckError();
 }
 
 Shader::~Shader() {
-    glDeleteProgram(program);
+    //glDeleteProgram(program);
 }
 
 void Shader::checkCompileErrors(unsigned int shader, std::string type) const
