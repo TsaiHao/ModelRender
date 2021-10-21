@@ -31,9 +31,10 @@ int main(int argc, char **argv)
 
     lightSource.getShader().use();
     glm::mat4 lightMvp(1.0f);
-    lightMvp = glm::translate(lightMvp, glm::vec3(0.6f, 0.f, 0.5f));
+    lightMvp = glm::translate(lightMvp, glm::vec3(0.f, 0.f, -2.5f));
     lightSource.getShader().setMat4("mvp", lightMvp);
 
+    float origZ = -5.0f;
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -44,10 +45,10 @@ int main(int argc, char **argv)
 
         render.getShader().use();
         render.getShader().setMat4("mvp", trans);
-        render.draw();
+        //render.draw();
         
         lightSource.draw();
-
+    
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
