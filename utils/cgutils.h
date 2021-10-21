@@ -13,6 +13,8 @@
 #define GL_WINDOW_WIDTH (1500)
 #define GL_WINDOW_HEIGHT (1500)
 
+#define PERFORMANCE Performance __perf__macro(__FUNCTION__)
+
 void glfwErrorCallback(int error, const char* description);
 
 void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -48,4 +50,16 @@ class Logger {
 public:
     static void error(const std::string &msg);
     static void warn(const std::string &msg);
+    static void message(const std::string& msg);
+};
+
+class Performance {
+public:
+    explicit Performance(std::string name);
+    ~Performance();
+
+private:
+    std::string tag;
+    int64_t startTimeUs;
+    int64_t endTimeUs;
 };

@@ -138,3 +138,20 @@ void Logger::error(const string &msg) {
 void Logger::warn(const string &msg) {
     cerr << "Warn " << msg << endl;
 }
+
+void Logger::message(const std::string& msg)
+{
+    cout << "Message: " << msg << endl;
+}
+
+Performance::Performance(std::string name)
+{
+    tag = name;
+    startTimeUs = glfwGetTime() * 1e6;
+}
+
+Performance::~Performance()
+{
+    endTimeUs = glfwGetTime() * 1e6;
+    Logger::message(tag + " consumed time: " + to_string(float(endTimeUs - startTimeUs) / 1000) + " ms");
+}

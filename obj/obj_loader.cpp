@@ -114,6 +114,8 @@ void ObjFace::parseObjWord(const std::string& word) {
 }
 
 ObjLoader::ObjLoader(const std::string& file) {
+    PERFORMANCE;
+
     ifstream ifs(file);
     if (!ifs) {
         cerr << "Error: load obj file: " << file << " failed";
