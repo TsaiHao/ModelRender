@@ -62,7 +62,9 @@ void ObjRender::bufferData() {
 }
 
 void ObjRender::draw() {
+    _glCheckError();
     shader.use();
+    _glCheckError();
     glBindVertexArray(VAO);
     int offset = 0;
 
