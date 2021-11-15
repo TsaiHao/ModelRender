@@ -8,10 +8,10 @@
 #include <iterator>
 
 #include "glad/glad.h"
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 
-#define GL_WINDOW_WIDTH (1500)
-#define GL_WINDOW_HEIGHT (1500)
+#define GL_WINDOW_WIDTH (800)
+#define GL_WINDOW_HEIGHT (800)
 
 #define PERFORMANCE Performance __perf__macro(__FUNCTION__)
 

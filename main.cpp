@@ -20,6 +20,7 @@ using namespace std;
 int main(int argc, char **argv)
 {
     GLFWwindow* window = glWindowInit();
+    glEnable(GL_DEPTH_TEST);
 
     glViewport(0, 0, GL_WINDOW_WIDTH, GL_WINDOW_HEIGHT);
 
@@ -58,9 +59,10 @@ int main(int argc, char **argv)
     lightSource.getShader().setInt("texture1", 0);
 
     float origZ = -5.0f;
+    
     while (!glfwWindowShouldClose(window))
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.f, 0.f, 0.f, 1.0f);
 
         float angle = glfwGetTime();

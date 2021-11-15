@@ -1,5 +1,4 @@
 #include "cgutils.h"
-#include "glfw/glfw3.h"
 
 using namespace std;
 
@@ -47,6 +46,8 @@ GLFWwindow *glWindowInit()
 
     glfwMakeContextCurrent(window);
     gladLoadGL();
+
+    glEnable(GL_DEPTH_TEST);
 
     return window;
 }
