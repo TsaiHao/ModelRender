@@ -3,6 +3,7 @@
 #include <iterator>
 #include <string>
 #include <array>
+#include <inttypes.h>
 
 #include "obj_loader.h"
 #include "cgutils.h"
@@ -82,7 +83,14 @@ void testFormatString() {
     cout << formatString(fmt, str.c_str(), i, f);
 }
 
+void testLogger() {
+    PERFORMANCE;
+    Logger::error("test error: %d, %f", 123, 3.124);
+    Logger::warn("test warn: %" PRIu64 " %.4f", 12314UL, 1.234);
+    Logger::message("test message: %s", __FUNCTION__);
+}
+
 int main(int argc, char **argv) {
-    testFormatString();
+    testLogger();
     return 0;
 }

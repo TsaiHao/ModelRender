@@ -27,13 +27,13 @@ void ObjVertex::parseObjLine(const std::string& line) {
 
 ObjTextureCoordinate::ObjTextureCoordinate(float x, float y, float z): coord({x, y, z}) { 
     if (x < 0 || x > 1.0f) {
-        cerr << "Waning: get wrong tex coord x " << x << endl;
+        Logger::warn("get wrong tex coord x ");
     }
     if (y < 0 || y > 1.0f) {
-        cerr << "Waning: get wrong tex coord y " << y << endl;
+        Logger::warn("get wrong tex coord y ");
     }
     if (z < 0 || z > 1.0f) {
-        cerr << "Waning: get wrong tex coord z " << z << endl; 
+        Logger::warn("get wrong tex coord z ");
     }
 }
 
@@ -118,7 +118,7 @@ ObjLoader::ObjLoader(const std::string& file) {
 
     ifstream ifs(file);
     if (!ifs) {
-        cerr << "Error: load obj file: " << file << " failed";
+        Logger::error("obj load file failed " + file);
         return;
     }
     string line;
@@ -159,7 +159,5 @@ ObjLoader::ObjLoader(const std::string& file) {
         }
     }
     
-    cout << "parse obj file: " << file << " completed" << endl
-        << "get vertex " << vertices.size() << endl
-        << "get face " << faces.size() << endl;
+    Logger::message("parse obj file %s, completed. get vertex %ld, get face %ld", file.c_str(), vertices.size(), faces.size());
 }

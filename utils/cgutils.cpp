@@ -49,13 +49,15 @@ GLFWwindow *glWindowInit()
 
     glEnable(GL_DEPTH_TEST);
 
+    glViewport(0, 0, GL_WINDOW_WIDTH, GL_WINDOW_HEIGHT);
+
     return window;
 }
 
 std::string readTextFile(const std::string &file) {
     std::ifstream ifs(file);
     if (!ifs) {
-        std::cerr << "Error: open file " << file << " failed" << std::endl;
+        Logger::error("open file failed"s + file);
         return "";
     }
 
@@ -127,22 +129,22 @@ GLenum glCheckError_(const char *file, int line) {
             case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
             case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
-        std::cout << error << " | " << file << " (" << line << ")" << std::endl;
+        Logger::error("gl error: %s[%d]: %s", file, line, error.c_str());
     }
     return errorCode;
 }
 
 void Logger::error(const string &msg) {
-    cerr << "Error " << msg << endl;
+    cerr << "Graphics Error: " << msg << endl;
 }
 
 void Logger::warn(const string &msg) {
-    cerr << "Warn " << msg << endl;
+    cerr << "Graphics Warn: " << msg << endl;
 }
 
 void Logger::message(const std::string& msg)
 {
-    cout << "Message: " << msg << endl;
+    cout << "Graphics Message: " << msg << endl;
 }
 
 Performance::Performance(std::string name)

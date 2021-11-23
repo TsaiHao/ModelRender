@@ -59,6 +59,24 @@ public:
     static void error(const std::string &msg);
     static void warn(const std::string &msg);
     static void message(const std::string& msg);
+
+    template <typename ... Args>
+    static void error(const std::string& fmt, Args ... args) {
+        auto msg = formatString(fmt, args...);
+        Logger::error(msg);
+    }
+
+    template <typename ... Args>
+    static void warn(const std::string& fmt, Args ... args) {
+        auto msg = formatString(fmt, args...);
+        Logger::warn(msg);
+    }
+
+    template <typename ... Args>
+    static void message(const std::string& fmt, Args ... args) {
+        auto msg = formatString(fmt, args...);
+        Logger::message(msg);
+    }
 };
 
 class Performance {

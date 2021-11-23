@@ -18,11 +18,8 @@ using namespace std;
 int main(int argc, char **argv)
 {
     GLFWwindow* window = glWindowInit();
-    glEnable(GL_DEPTH_TEST);
 
-    glViewport(0, 0, GL_WINDOW_WIDTH, GL_WINDOW_HEIGHT);
-
-    ObjRender render("resource/cylinder.obj", "resource/light.vs", "resource/light.fs");
+    ObjRender render("resource/.obj", "resource/light.vs", "resource/light.fs");
     ObjRender lightSource("resource/cube.obj", "resource/plain.vs", "resource/plain.fs");
 
     render.getShader().use();
