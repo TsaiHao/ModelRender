@@ -6,6 +6,9 @@
 #include "shader.h"
 #include "cgutils.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 using namespace std;
 
 Shader::Shader(const string &vertFile, const string &fragFile) {
@@ -35,6 +38,31 @@ Shader::Shader(const string &vertFile, const string &fragFile) {
 
 Shader::~Shader() {
     //glDeleteProgram(program);
+}
+
+void Shader::use(const bool bindTextures) const
+{
+    _glCheckError();
+
+    glUseProgram(program);
+    if (bindTextures) {
+        for (int i = 0; i < textures.size(); ++i) {
+            textures[i].bind(i);
+        }
+    }
+    _glCheckError();
+}
+
+void Shader::attachTexture(const std::string& texName, const Texture& tex)
+{
+    if (textures.size() > 16) {
+        return;
+    }
+
+    use();
+    setInt(texName.c_str(), textures.size());
+    textures.emplace_back(tex);
+    Logger::message("shader " + to_string(program) + " attach tex " + to_string(tex.getTexture()));
 }
 
 void Shader::checkCompileErrors(unsigned int shader, std::string type) const
@@ -68,4 +96,39 @@ GLint Shader::getUniformLocation(const std::string &name) const {
     }
 
     return loc;
+}
+
+Texture::Texture(const std::string& imagePath)
+{
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    int width, height, nChannel;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* data = stbi_load(imagePath.c_str(), &width, &height, &nChannel, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    stbi_image_free(data);
+
+    Logger::message("new texture " + to_string(texture) + ", image " + imagePath);
+}
+
+void Texture::setParam(GLenum type, GLint value) const
+{
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, type, value);
+}
+
+void Texture::bind(const int unit) const
+{
+    _glCheckError();
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    _glCheckError();
 }

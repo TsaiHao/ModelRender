@@ -10,7 +10,7 @@ struct strFinder {
 
 void glfwErrorCallback(int error, const char* description)
 {
-    fprintf(stderr, "Error: %s\n", description);
+    Logger::error(description);
 }
 
 void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)

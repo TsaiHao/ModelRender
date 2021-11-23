@@ -14,8 +14,6 @@ using namespace std;
 #include "obj_loader.h"
 #include "obj_render.h"
 #include "cgutils.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 int main(int argc, char **argv)
 {
@@ -40,24 +38,8 @@ int main(int argc, char **argv)
     lightMvp = glm::rotate(lightMvp, glm::radians(60.0f), glm::vec3(0.2f, 0.5f, 0.8f));
     lightSource.getShader().setMat4("mvp", lightMvp);
 
-    GLuint tex;
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int width, height, nChannel;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* data = stbi_load("resource/wall.jpg", &width, &height, &nChannel, 0);
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    stbi_image_free(data);
-    lightSource.getShader().setInt("texture1", 0);
-
+    Texture tex("resource/wall.jpg");
+    lightSource.getShader().attachTexture("texture1", tex);
     float origZ = -5.0f;
     
     while (!glfwWindowShouldClose(window))
@@ -71,10 +53,7 @@ int main(int argc, char **argv)
         render.getShader().use();
         render.getShader().setMat4("mvp", trans);
         //render.draw();
-        
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, tex);
         lightSource.draw();
     
         glfwSwapBuffers(window);

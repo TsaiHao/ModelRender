@@ -15,6 +15,9 @@
 
 #define PERFORMANCE Performance __perf__macro(__FUNCTION__)
 
+GLenum glCheckError_(const char* file, int line);
+#define _glCheckError() glCheckError_(__FILE__, __LINE__) 
+
 void glfwErrorCallback(int error, const char* description);
 
 void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -42,9 +45,6 @@ void printVertices(const std::string &file, const std::vector<T> &vertices, cons
         }
     }
 }
-
-GLenum glCheckError_(const char *file, int line);
-#define _glCheckError() glCheckError_(__FILE__, __LINE__) 
 
 class Logger {
 public:

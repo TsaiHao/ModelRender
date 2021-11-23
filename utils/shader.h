@@ -1,11 +1,30 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "glad/glad.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+
+
+class Texture {
+public:
+    explicit Texture(const std::string& imagePath = "");
+    ~Texture() = default;
+
+    void setParam(GLenum type, GLint value) const;
+
+    GLuint getTexture() const {
+        return texture;
+    }
+
+    void bind(const int unit = 0) const;
+
+private:
+    GLuint texture;
+};
 
 class Shader {
 public:
@@ -13,9 +32,7 @@ public:
     Shader(const std::string &vertFile, const std::string &fragFile);
     ~Shader();
 
-    void use() const {
-        glUseProgram(program);
-    }
+    void use(const bool bindTextures = true) const;
 
     void setBool(const std::string &name, bool value) const
     {         
@@ -51,6 +68,8 @@ public:
         glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
     }
 
+    void attachTexture(const std::string& texName, const Texture& tex);
+
 private:
     void checkCompileErrors(unsigned int shader, std::string type) const;
     GLint getUniformLocation(const std::string &name) const;
@@ -58,4 +77,6 @@ private:
     GLuint vertShader;
     GLuint fragShader;
     GLuint program;
+
+    std::vector<Texture> textures;
 };
