@@ -71,7 +71,18 @@ void testPushVector() {
     cout << endl;
 }
 
+void testFormatString() {
+    PERFORMANCE;
+    string fmt("string: %s;\ninteger: %5d\nfloat: %.4f");
+    string str("test string");
+    int i = 1234;
+    float f = 3.1415926f;
+
+    TEST_PRINT;
+    cout << formatString(fmt, str.c_str(), i, f);
+}
+
 int main(int argc, char **argv) {
-    testStringSpilt();
+    testFormatString();
     return 0;
 }

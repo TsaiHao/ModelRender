@@ -6,6 +6,7 @@
 #include <iostream>
 #include <algorithm>
 #include <iterator>
+#include <stdexcept>
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -18,10 +19,6 @@
 GLenum glCheckError_(const char* file, int line);
 #define _glCheckError() glCheckError_(__FILE__, __LINE__) 
 
-void glfwErrorCallback(int error, const char* description);
-
-void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
 GLFWwindow *glWindowInit();
 
 std::string readTextFile(const std::string &file); 
@@ -29,6 +26,17 @@ std::string readTextFile(const std::string &file);
 std::string stripString(const std::string& str);
 
 std::vector<std::string> splitString(const std::string &str, const std::string &del, bool discardSpace = true);
+
+template <typename ... Args>
+std::string formatString(const std::string& fmt, Args ... args) {
+    int len = snprintf(NULL, 0, fmt.c_str(), args ...);
+    if (len < 0) {
+        return "format string error";
+    }
+    std::string buffer(len + 1, '\0');
+    snprintf(buffer.data(), buffer.size(), fmt.c_str(), args ...);
+    return buffer;
+}
 
 template <typename Container1, typename Container2>
 void pushVector(Container1& target, const Container2 &source) {

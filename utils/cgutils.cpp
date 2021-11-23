@@ -8,12 +8,12 @@ struct strFinder {
     }
 };
 
-void glfwErrorCallback(int error, const char* description)
+static void glfwErrorCallback(int error, const char* description)
 {
     Logger::error(description);
 }
 
-void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
