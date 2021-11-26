@@ -18,11 +18,13 @@ public:
 
     void attachShader(const std::string& vsFile, const std::string& fsFile);
     Shader& getShader();
+    
+public:
+    Shader shader;
 
 private:
     GLuint VAO, VBO;
     std::shared_ptr<ObjLoader> obj;
-    Shader shader;
     std::vector<float> vertices;        // store vertices' position/texture/normal data
 };
 

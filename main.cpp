@@ -30,15 +30,11 @@ int main(int argc, char **argv)
     render.getShader().setFloatVec3("lightPos", lightPos);
 
     lightSource.getShader().use();
-    glm::mat4 lightMvp(1.0f);
-    lightMvp = glm::scale(lightMvp, glm::vec3(0.5f, 0.5f, 0.5f));
-    lightMvp = glm::rotate(lightMvp, glm::radians(60.0f), glm::vec3(0.2f, 0.5f, 0.8f));
-    lightSource.getShader().setMat4("mvp", lightMvp);
 
     Texture tex("resource/wall.jpg");
     lightSource.getShader().attachTexture("texture1", tex);
-    float origZ = -5.0f;
     
+    float speed = 0.5f;
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -50,6 +46,12 @@ int main(int argc, char **argv)
         render.getShader().use();
         render.getShader().setMat4("mvp", trans);
         //render.draw();
+
+        glm::mat4 lightMvp(1.0f);
+        lightMvp = glm::translate(lightMvp, glm::vec3(0, 0.5f, 0));
+        lightMvp = glm::rotate(lightMvp, float(glfwGetTime() * speed), glm::vec3(0.2f, 0.5f, 0.8f));
+        lightMvp = glm::scale(lightMvp, glm::vec3(0.5f, 0.5f, 0.5f));
+        lightSource.shader.setMat4("mvp", lightMvp);
 
         lightSource.draw();
     
