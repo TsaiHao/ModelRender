@@ -26,4 +26,9 @@ add_executable(utest test/unit_test.cpp ${GLAD_SOURCE_FILE} ${UTIL_SOURCE_FILES}
 target_link_libraries(graphics glfw ${CMAKE_DL_LIBS})
 target_link_libraries(utest glfw ${CMAKE_DL_LIBS})
 
-file(COPY resource DESTINATION .)
+message(STATUS ${CMAKE_CURRENT_BINARY_DIR})
+
+add_custom_command(TARGET graphics POST_BUILD
+        COMMENT "copy resource file"
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/resource ${CMAKE_CURRENT_BINARY_DIR}/resource)

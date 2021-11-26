@@ -57,7 +57,7 @@ GLFWwindow *glWindowInit()
 std::string readTextFile(const std::string &file) {
     std::ifstream ifs(file);
     if (!ifs) {
-        Logger::error("open file failed"s + file);
+        Logger::error("open file failed "s + file);
         return "";
     }
 
