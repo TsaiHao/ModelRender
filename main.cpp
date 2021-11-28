@@ -48,9 +48,10 @@ int main(int argc, char **argv)
         //render.draw();
 
         glm::mat4 lightMvp(1.0f);
+        lightMvp = glm::rotate(lightMvp, float(glm::radians(glfwGetTime() * speed * 20)), glm::vec3(0, 0, 1));
         lightMvp = glm::translate(lightMvp, glm::vec3(0, 0.5f, 0));
         lightMvp = glm::rotate(lightMvp, float(glfwGetTime() * speed), glm::vec3(0.2f, 0.5f, 0.8f));
-        lightMvp = glm::scale(lightMvp, glm::vec3(0.5f, 0.5f, 0.5f));
+        lightMvp = glm::scale(lightMvp, glm::vec3(0.25f, 0.25f, 0.25f));
         lightSource.shader.setMat4("mvp", lightMvp);
 
         lightSource.draw();
