@@ -70,6 +70,10 @@ public:
 
     void attachTexture(const std::string& texName, const Texture& tex);
 
+    GLuint getProgram() const {
+        return program;
+    }
+
 private:
     void checkCompileErrors(unsigned int shader, std::string type) const;
     GLint getUniformLocation(const std::string &name) const;

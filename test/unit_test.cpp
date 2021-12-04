@@ -7,6 +7,7 @@
 
 #include "obj_loader.h"
 #include "cgutils.h"
+#include "obj_animator.h"
 
 #define TEST_PRINT cout << "-----------------TEST-----------------" << endl; \
                    cout << "test function " << __FUNCTION__ << endl;
@@ -91,6 +92,5 @@ void testLogger() {
 }
 
 int main(int argc, char **argv) {
-    testLogger();
     return 0;
 }

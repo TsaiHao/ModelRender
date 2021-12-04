@@ -7,6 +7,7 @@
 
 #include "obj_loader.h"
 #include "shader.h"
+#include "obj_animator.h"
 
 class ObjRender {
 public:
@@ -21,8 +22,10 @@ public:
     
 public:
     Shader shader;
+    ObjAnimator animator;
 
 private:
+    void emplaceAnimator();
     GLuint VAO, VBO;
     std::shared_ptr<ObjLoader> obj;
     std::vector<float> vertices;        // store vertices' position/texture/normal data
