@@ -13,7 +13,8 @@ include_directories(glfw/include
 
 set(OBJ_SOURCE_FILES
         obj/obj_render.cpp
-        obj/obj_loader.cpp)
+        obj/obj_loader.cpp
+		obj/obj_animator.cpp)
 set(UTIL_SOURCE_FILES
         utils/cgutils.cpp
         utils/shader.cpp)
