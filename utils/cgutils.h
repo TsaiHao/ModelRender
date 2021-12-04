@@ -11,13 +11,9 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
-#define GL_WINDOW_WIDTH (800)
-#define GL_WINDOW_HEIGHT (800)
-
-#define PERFORMANCE Performance __perf__macro(__FUNCTION__)
+#include "cgmacros.h"
 
 GLenum glCheckError_(const char* file, int line);
-#define _glCheckError() glCheckError_(__FILE__, __LINE__) 
 
 GLFWwindow *glWindowInit();
 

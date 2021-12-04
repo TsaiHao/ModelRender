@@ -43,13 +43,14 @@ GLFWwindow *glWindowInit()
     }
 
     glfwSetKeyCallback(window, glfwKeyCallback);
+    glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+        glViewport(0, 0, width, height);
+    });
 
     glfwMakeContextCurrent(window);
     gladLoadGL();
 
     glEnable(GL_DEPTH_TEST);
-
-    glViewport(0, 0, GL_WINDOW_WIDTH, GL_WINDOW_HEIGHT);
 
     return window;
 }
