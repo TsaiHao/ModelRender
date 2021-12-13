@@ -1,26 +1,15 @@
-#include "glad/glad.h"
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-
 #include <stdlib.h>
 #include <iostream>
 using namespace std;
 
-#include "shader.h"
-#include "obj_render.h"
-#include "cgutils.h"
+#include "glbase/glbase.h"
 
 int main(int argc, char **argv)
 {
-    GLFWwindow* window = glWindowInit();
+    WindowType window = glWindowInit();
 
     ObjRender lightSource("resource/cube.obj", "resource/plain.vs", "resource/plain.fs");
-
-    lightSource.getShader().use();
-    Texture tex("resource/wall.jpg");
-    lightSource.getShader().attachTexture("texture1", tex);
+    lightSource.shader->attachTexture("texture", Texture("resource/wall.jpg"));
 
     auto trans = AnimatorActor::getActor(AnimationType::Translate, "trans");
     trans->setOrigin({0, 0.2f, 0});
@@ -35,7 +24,7 @@ int main(int argc, char **argv)
     lightSource.animator.addDynamicActor(rotate);
     lightSource.animator.addDynamicActor(scale);
 
-    while (!glfwWindowShouldClose(window))
+    while (true)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.f, 0.f, 0.f, 1.0f);

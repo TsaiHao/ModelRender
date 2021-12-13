@@ -1,11 +1,14 @@
 #include "obj_animator.h"
 #include "cgutils.h"
+#include "shader.h"
 
 using namespace std;
 
-ObjAnimator::ObjAnimator(const Shader &s, const std::string& mvpMatrixName): shader(s), mvpUniformName(mvpMatrixName), mvp(glm::mat4(1.0f)) {
-    if (s.getProgram() < 0 || mvpMatrixName.empty()) {
-        Logger::error("init animator failed, shader: %d, name: %s", s.getProgram(), mvpMatrixName.c_str());
+ObjAnimator::ObjAnimator(std::shared_ptr<Shader> s, const std::string& mvpMatrixName): mvpUniformName(mvpMatrixName), mvp(glm::mat4(1.0f)) {
+    shader = s;
+
+    if (s->getProgram() < 0 || mvpMatrixName.empty()) {
+        Logger::error("init animator failed, shader: %d, name: %s", s->getProgram(), mvpMatrixName.c_str());
     }
 }
 
@@ -16,11 +19,11 @@ void ObjAnimator::addDynamicActor(const ActorType& actor) {
 void ObjAnimator::doProcess() {
     mvp = glm::mat4(1.0f);
     for (auto&& actor : dynamicActors) {
-        actor->onNotifyTime(glfwGetTime());
+        actor->onNotifyTime(getTime());
         actor->onProcess(mvp);
     }
 
-    shader.setMat4(mvpUniformName, mvp);
+    shader->setMat4(mvpUniformName, mvp);
     _glCheckError();
 }
 

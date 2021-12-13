@@ -4,7 +4,6 @@
 #include <cmath>
 #include <iterator>
 
-#include "glad/glad.h"
 #include "obj_loader.h"
 #include "cgutils.h"
 using namespace std;

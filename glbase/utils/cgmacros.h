@@ -7,6 +7,8 @@
 #define GL_WINDOW_WIDTH (800)
 #define GL_WINDOW_HEIGHT (800)
 
+#define VPTR(x) (glm::value_ptr(x))
+
 #define ROTATE_ANGLE_KEY 0x1
 
 #endif //GRAPHICS_CGMACROS_H
