@@ -16,7 +16,7 @@ void ObjAnimator::addDynamicActor(const ActorType& actor) {
 void ObjAnimator::doProcess() {
     mvp = glm::mat4(1.0f);
     for (auto&& actor : dynamicActors) {
-        actor->onNotifyTime(glfwGetTime());
+        actor->onNotifyTime(getTime());
         actor->onProcess(mvp);
     }
 

@@ -26,6 +26,7 @@ add_library(${GL_LIBRARY} SHARED ${UTIL_SOURCE_FILES} ${OBJ_SOURCE_FILES} ${GLAD
 #target_include_directories(${GL_LIBRARY} PRIVATE ${GL_INCLUDE_DIR})
 
 if (GEN_EXE)
+	add_compile_definitions(USE_GLFW)
 	list(APPEND GL_INCLUDE_DIR glfw/include)
 	add_executable(graphics main.cpp )
 	add_executable(utest test/unit_test.cpp)

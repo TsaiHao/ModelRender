@@ -8,6 +8,7 @@ struct strFinder {
     }
 };
 
+#ifdef USE_GLFW
 static void glfwErrorCallback(int error, const char* description)
 {
     Logger::error(description);
@@ -18,11 +19,13 @@ static void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int actio
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
+#endif
 
-GLFWwindow *glWindowInit()
+WindowType glWindowInit()
 {
-    GLFWwindow* window;
+    WindowType window = nullptr;
 
+#ifdef USE_GLFW
     glfwSetErrorCallback(glfwErrorCallback);
 
     if (!glfwInit())
@@ -48,8 +51,9 @@ GLFWwindow *glWindowInit()
     });
 
     glfwMakeContextCurrent(window);
-    gladLoadGL();
+#endif
 
+    gladLoadGL();
     glEnable(GL_DEPTH_TEST);
 
     return window;
@@ -135,6 +139,23 @@ GLenum glCheckError_(const char *file, int line) {
     return errorCode;
 }
 
+double getTime() {
+#ifdef USE_GLFW
+    return glfwGetTime();
+#else
+    #if defined __linux__ || defined __APPLE__
+        timeval t;
+        gettimeofday(&t, nullptr);
+        double ret = t.tv_usec;
+        ret /= 1e6;
+        ret += t.tv_sec;
+        return ret;
+    #else
+        return 0;
+    #endif
+#endif
+}
+
 void Logger::error(const string &msg) {
     cerr << "Graphics Error: " << msg << endl;
 }
@@ -151,11 +172,11 @@ void Logger::message(const std::string& msg)
 Performance::Performance(std::string name)
 {
     tag = name;
-    startTimeUs = glfwGetTime() * 1e6;
+    startTimeUs = getTime() * 1e6;
 }
 
 Performance::~Performance()
 {
-    endTimeUs = glfwGetTime() * 1e6;
+    endTimeUs = getTime() * 1e6;
     Logger::message(tag + " consumed time: " + to_string(float(endTimeUs - startTimeUs) / 1000) + " ms");
 }

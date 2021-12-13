@@ -9,15 +9,28 @@
 #include <stdexcept>
 
 #include "glad/glad.h"
+
+#ifdef USE_GLFW
 #include "GLFW/glfw3.h"
+using WindowType = GLFWwindow*;
+#else
+using WindowType = void*;
+#endif
+
+#if defined(__linux__) || defined(__APPLE__)
+#include <unistd.h>
+#include <sys/time.h>
+#endif
 
 #include "cgmacros.h"
 
 GLenum glCheckError_(const char* file, int line);
 
-GLFWwindow *glWindowInit();
+double getTime();
 
-std::string readTextFile(const std::string &file); 
+WindowType glWindowInit();
+
+std::string readTextFile(const std::string &file);
 
 std::string stripString(const std::string& str);
 
