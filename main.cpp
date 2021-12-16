@@ -1,26 +1,15 @@
-#include "glad/glad.h"
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-
 #include <stdlib.h>
 #include <iostream>
 using namespace std;
 
-#include "shader.h"
-#include "obj_render.h"
-#include "cgutils.h"
+#include "glbase/glbase.h"
 
 int main(int argc, char **argv)
 {
     WindowType window = glWindowInit();
 
     ObjRender lightSource("resource/cube.obj", "resource/plain.vs", "resource/plain.fs");
-
-    lightSource.getShader().use();
-    Texture tex("resource/wall.jpg");
-    lightSource.getShader().attachTexture("texture1", tex);
+    lightSource.shader->attachTexture("texture1", Texture("resource/wall.jpg"));
 
     auto trans = AnimatorActor::getActor(AnimationType::Translate, "trans");
     trans->setOrigin({0, 0.2f, 0});

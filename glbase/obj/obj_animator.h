@@ -7,9 +7,9 @@
 #include <any>
 #include <memory>
 
-#include "cgutils.h"
-#include "shader.h"
-#include "glm/glm.hpp"
+#include "../glm/glm/glm.hpp"
+
+class Shader;
 
 using Vec3 = glm::vec3;
 using Mat4 = glm::mat4;
@@ -76,14 +76,14 @@ public:
 
     ObjAnimator() = default;
 
-    explicit ObjAnimator(const Shader &s, const std::string &mvpMatrixName = "mvp");
+    explicit ObjAnimator(std::shared_ptr<Shader> s, const std::string &mvpMatrixName = "mvp");
 
     void addDynamicActor(const ActorType &actor);
 
     void doProcess();
 
 private:
-    Shader shader;
+    std::shared_ptr<Shader> shader;
     std::string mvpUniformName;
     std::vector<ActorType> dynamicActors;       // set every loop
     glm::mat4 mvp;

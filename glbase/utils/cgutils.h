@@ -8,7 +8,8 @@
 #include <iterator>
 #include <stdexcept>
 
-#include "glad/glad.h"
+#include "../glad/include/glad/glad.h"
+#include "cgmacros.h"
 
 #ifdef USE_GLFW
 #include "GLFW/glfw3.h"
@@ -24,7 +25,7 @@ using WindowType = void*;
 
 #include "cgmacros.h"
 
-GLenum glCheckError_(const char* file, int line);
+int glCheckError_(const char* file, int line);
 
 double getTime();
 

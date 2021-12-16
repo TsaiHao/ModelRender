@@ -1,5 +1,7 @@
 #include "cgutils.h"
 
+#include "glad/glad.h"
+
 using namespace std;
 
 struct strFinder {
@@ -119,7 +121,7 @@ std::vector<std::string> splitString(const std::string &str, const std::string &
     return res;
 }
 
-GLenum glCheckError_(const char *file, int line) {
+int glCheckError_(const char *file, int line) {
     GLenum errorCode;
     while ((errorCode = glGetError()) != GL_NO_ERROR)
     {
@@ -136,7 +138,24 @@ GLenum glCheckError_(const char *file, int line) {
         }
         Logger::error("gl error: %s[%d]: %s", file, line, error.c_str());
     }
-    return errorCode;
+    return static_cast<int>(errorCode);
+}
+
+double getTime() {
+#ifdef USE_GLFW
+    return glfwGetTime();
+#else
+    #if defined __linux__ || defined __APPLE__
+        timeval t;
+        gettimeofday(&t, nullptr);
+        double ret = t.tv_usec;
+        ret /= 1e6;
+        ret += t.tv_sec;
+        return ret;
+    #else
+        return 0;
+    #endif
+#endif
 }
 
 double getTime() {

@@ -7,7 +7,12 @@
 #include "cgutils.h"
 
 #define STB_IMAGE_IMPLEMENTATION
+
 #include "stb_image.h"
+
+#include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 using namespace std;
 
@@ -17,17 +22,17 @@ Shader::Shader(const string &vertFile, const string &fragFile) {
     assert(!vertStr.empty() && !fragStr.empty());
 
     vertShader = glCreateShader(GL_VERTEX_SHADER);
-    const char* vertChars = vertStr.c_str();
+    const char *vertChars = vertStr.c_str();
     glShaderSource(vertShader, 1, &(vertChars), NULL);
     glCompileShader(vertShader);
     checkCompileErrors(vertShader, "VERTEX");
 
     fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-    const char* fragChars = fragStr.c_str();
+    const char *fragChars = fragStr.c_str();
     glShaderSource(fragShader, 1, &(fragChars), NULL);
     glCompileShader(fragShader);
     checkCompileErrors(fragShader, "FRAGMENT");
-    
+
     program = glCreateProgram();
     glAttachShader(program, vertShader);
     glAttachShader(program, fragShader);
@@ -40,8 +45,7 @@ Shader::~Shader() {
     //glDeleteProgram(program);
 }
 
-void Shader::use(const bool bindTextures) const
-{
+void Shader::use(const bool bindTextures) const {
     _glCheckError();
 
     glUseProgram(program);
@@ -53,8 +57,7 @@ void Shader::use(const bool bindTextures) const
     _glCheckError();
 }
 
-void Shader::attachTexture(const std::string& texName, const Texture& tex)
-{
+void Shader::attachTexture(const std::string &texName, const Texture &tex) {
     if (textures.size() > 16) {
         return;
     }
@@ -65,26 +68,22 @@ void Shader::attachTexture(const std::string& texName, const Texture& tex)
     Logger::message("shader " + to_string(program) + " attach tex " + to_string(tex.getTexture()));
 }
 
-void Shader::checkCompileErrors(unsigned int shader, std::string type) const
-{
+void Shader::checkCompileErrors(unsigned int shader, std::string type) const {
     int success;
     char infoLog[1024];
-    if (type != "PROGRAM")
-    {
+    if (type != "PROGRAM") {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
+        if (!success) {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+            std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog
+                      << "\n -- --------------------------------------------------- -- " << std::endl;
         }
-    }
-    else
-    {
+    } else {
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
-        if (!success)
-        {
+        if (!success) {
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-            std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+            std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog
+                      << "\n -- --------------------------------------------------- -- " << std::endl;
         }
     }
 }
@@ -98,8 +97,33 @@ GLint Shader::getUniformLocation(const std::string &name) const {
     return loc;
 }
 
-Texture::Texture(const std::string& imagePath)
-{
+Shader::Shader(const Shader &shd) {
+    program = shd.program;
+    vertShader = shd.vertShader;
+    fragShader = shd.fragShader;
+    textures = shd.textures;
+}
+
+GLuint Shader::getProgram() const {
+    return program;
+}
+
+void Shader::setMat4(const string &name, const float *value) const {
+    use();
+    glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, value);
+}
+
+void Shader::setFloatVec4(const string &name, const float *value) const {
+    use();
+    glUniform4fv(getUniformLocation(name), 1, value);
+}
+
+void Shader::setInt(const string &name, int value) const {
+    use();
+    glUniform1i(getUniformLocation(name), value);
+}
+
+Texture::Texture(const std::string &imagePath) {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -109,7 +133,7 @@ Texture::Texture(const std::string& imagePath)
 
     int width, height, nChannel;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char* data = stbi_load(imagePath.c_str(), &width, &height, &nChannel, 0);
+    unsigned char *data = stbi_load(imagePath.c_str(), &width, &height, &nChannel, 0);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -119,16 +143,22 @@ Texture::Texture(const std::string& imagePath)
     Logger::message("new texture " + to_string(texture) + ", image " + imagePath);
 }
 
-void Texture::setParam(GLenum type, GLint value) const
-{
+void Texture::setParam(GLenum type, GLint value) const {
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, type, value);
 }
 
-void Texture::bind(const int unit) const
-{
+void Texture::bind(const int unit) const {
     _glCheckError();
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, texture);
     _glCheckError();
+}
+
+Texture::Texture(const Texture &tex) {
+    texture = tex.texture;
+}
+
+GLuint Texture::getTexture() const {
+    return texture;
 }

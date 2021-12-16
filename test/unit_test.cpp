@@ -5,9 +5,7 @@
 #include <array>
 #include <inttypes.h>
 
-#include "obj_loader.h"
-#include "cgutils.h"
-#include "obj_animator.h"
+#include "../glbase/glbase.h"
 
 #define TEST_PRINT cout << "-----------------TEST-----------------" << endl; \
                    cout << "test function " << __FUNCTION__ << endl;

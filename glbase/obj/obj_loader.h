@@ -4,8 +4,6 @@
 #include <array>
 #include <memory>
 
-#include "glad/glad.h"
-
 struct ObjBase {
     ObjBase() = default;
     ObjBase(const std::string& line) {}
