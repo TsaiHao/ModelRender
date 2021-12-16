@@ -9,6 +9,7 @@
 #include <stdexcept>
 
 #include "../glad/include/glad/glad.h"
+#include "cgmacros.h"
 
 #ifdef USE_GLFW
 #include "GLFW/glfw3.h"

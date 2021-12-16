@@ -2,6 +2,8 @@
 #include "cgutils.h"
 #include "shader.h"
 
+#include "glm/gtc/type_ptr.hpp"
+
 using namespace std;
 
 ObjAnimator::ObjAnimator(std::shared_ptr<Shader> s, const std::string& mvpMatrixName): mvpUniformName(mvpMatrixName), mvp(glm::mat4(1.0f)) {
@@ -23,7 +25,7 @@ void ObjAnimator::doProcess() {
         actor->onProcess(mvp);
     }
 
-    shader->setMat4(mvpUniformName, mvp);
+    shader->setMat4(mvpUniformName, VPTR(mvp));
     _glCheckError();
 }
 
