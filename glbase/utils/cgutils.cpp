@@ -1,7 +1,5 @@
 #include "cgutils.h"
 
-#include "glad/glad.h"
-
 using namespace std;
 
 struct strFinder {
@@ -55,7 +53,9 @@ WindowType glWindowInit()
     glfwMakeContextCurrent(window);
 #endif
 
+#ifndef __ANDROID__
     gladLoadGL();
+#endif
     glEnable(GL_DEPTH_TEST);
 
     return window;
@@ -131,8 +131,10 @@ int glCheckError_(const char *file, int line) {
             case GL_INVALID_ENUM:                  error = "INVALID_ENUM"; break;
             case GL_INVALID_VALUE:                 error = "INVALID_VALUE"; break;
             case GL_INVALID_OPERATION:             error = "INVALID_OPERATION"; break;
+#ifndef __ANDROID__
             case GL_STACK_OVERFLOW:                error = "STACK_OVERFLOW"; break;
             case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
+#endif
             case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
             case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
@@ -145,7 +147,7 @@ double getTime() {
 #ifdef USE_GLFW
     return glfwGetTime();
 #else
-    #if defined __linux__ || defined __APPLE__
+    #ifndef _WIN32
         timeval t;
         gettimeofday(&t, nullptr);
         double ret = t.tv_usec;

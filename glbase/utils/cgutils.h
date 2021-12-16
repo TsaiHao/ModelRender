@@ -7,8 +7,13 @@
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
+#include <cstdio>
 
+#ifndef __ANDROID__
 #include "../glad/include/glad/glad.h"
+#else
+#include "GLES3/gl3.h"
+#endif
 #include "cgmacros.h"
 
 #ifdef USE_GLFW
@@ -18,7 +23,7 @@ using WindowType = GLFWwindow*;
 using WindowType = void*;
 #endif
 
-#if defined(__linux__) || defined(__APPLE__)
+#ifndef _WIN32
 #include <unistd.h>
 #include <sys/time.h>
 #endif
@@ -44,7 +49,7 @@ std::string formatString(const std::string& fmt, Args ... args) {
         return "format string error";
     }
     std::string buffer(len + 1, '\0');
-    snprintf(buffer.data(), buffer.size(), fmt.c_str(), args ...);
+    std::snprintf((char*)buffer.data(), buffer.size(), fmt.c_str(), args ...);
     return buffer;
 }
 

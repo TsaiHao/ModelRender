@@ -20,7 +20,4 @@ if (GEN_EXE)
         	COMMENT "copy resource file"
 			COMMAND ${CMAKE_COMMAND} -E copy_directory
         	${CMAKE_SOURCE_DIR}/resource ${CMAKE_CURRENT_BINARY_DIR}/resource)
-
-	message(STATUS ${GL_BASE_INCLUDE})
-	message(STATUS ${INCLUDE_DIRECTORIES})
 endif()

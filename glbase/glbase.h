@@ -1,4 +1,3 @@
-//#include "glad/include/glad/glad.h"
 #include "utils/cgutils.h"
 
 #if defined(USE_GLFW)
