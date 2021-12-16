@@ -1,15 +1,12 @@
-#include <stdlib.h>
-#include <iostream>
 using namespace std;
-
 #include "glbase/glbase.h"
 
 int main(int argc, char **argv)
 {
     WindowType window = glWindowInit();
 
-    ObjRender lightSource("resource/cube.obj", "resource/plain.vs", "resource/plain.fs");
-    lightSource.shader->attachTexture("texture1", Texture("resource/wall.jpg"));
+    ObjRender lightSource("resource/model/cube.obj", "resource/shader/plain.vs", "resource/shader/plain.fs");
+    lightSource.shader->attachTexture("texture1", Texture("resource/texture/wall.jpg"));
 
     auto trans = AnimatorActor::getActor(AnimationType::Translate, "trans");
     trans->setOrigin({0, 0.2f, 0});

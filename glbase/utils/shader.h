@@ -14,7 +14,7 @@ public:
 
     GLuint getTexture() const;
 
-    void bind(const int unit = 0) const;
+    void bind(int unit = 0) const;
 
 private:
     GLuint texture;
@@ -40,6 +40,7 @@ public:
 private:
     void checkCompileErrors(unsigned int shader, std::string type) const;
     GLint getUniformLocation(const std::string &name) const;
+    void modifyShaderVersion(std::string &shader) const;
 
     GLuint vertShader;
     GLuint fragShader;

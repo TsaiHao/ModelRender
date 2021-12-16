@@ -19,6 +19,8 @@ using namespace std;
 Shader::Shader(const string &vertFile, const string &fragFile) {
     string vertStr = readTextFile(vertFile);
     string fragStr = readTextFile(fragFile);
+    modifyShaderVersion(vertStr);
+    modifyShaderVersion(fragStr);
     assert(!vertStr.empty() && !fragStr.empty());
 
     vertShader = glCreateShader(GL_VERTEX_SHADER);
@@ -121,6 +123,26 @@ void Shader::setFloatVec4(const string &name, const float *value) const {
 void Shader::setInt(const string &name, int value) const {
     use();
     glUniform1i(getUniformLocation(name), value);
+}
+
+void Shader::modifyShaderVersion(std::string &shader) const {
+    if (shader.empty()) {
+        return;
+    }
+
+    stringstream ss(shader);
+    string line;
+    getline(ss, line);
+
+    if (line.substr(0, 8) == "#version") {
+        return;     // use shader version
+    }
+
+#if defined(__ANDROID__) || defined(__IOS__)
+    shader = string("#version 300 es") + shader;
+#else
+    shader = string("#version 330 core\n") + shader;
+#endif
 }
 
 Texture::Texture(const std::string &imagePath) {

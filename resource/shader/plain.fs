@@ -1,5 +1,3 @@
-#version 330 core
-
 in vec3 texCoord;
 in vec3 vertNorm;
 
