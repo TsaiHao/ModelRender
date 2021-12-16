@@ -3,6 +3,7 @@
 #include "shader.h"
 
 #include "glm/gtc/type_ptr.hpp"
+#include "cgmacros.h"
 
 using namespace std;
 

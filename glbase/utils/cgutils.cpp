@@ -158,23 +158,6 @@ double getTime() {
 #endif
 }
 
-double getTime() {
-#ifdef USE_GLFW
-    return glfwGetTime();
-#else
-    #if defined __linux__ || defined __APPLE__
-        timeval t;
-        gettimeofday(&t, nullptr);
-        double ret = t.tv_usec;
-        ret /= 1e6;
-        ret += t.tv_sec;
-        return ret;
-    #else
-        return 0;
-    #endif
-#endif
-}
-
 void Logger::error(const string &msg) {
     cerr << "Graphics Error: " << msg << endl;
 }
