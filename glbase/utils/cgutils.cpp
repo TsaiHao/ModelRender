@@ -1,4 +1,7 @@
 #include "cgutils.h"
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
 
 using namespace std;
 
@@ -161,16 +164,28 @@ double getTime() {
 }
 
 void Logger::error(const string &msg) {
+#ifndef __ANDROID__
     cerr << "Graphics Error: " << msg << endl;
+#else
+    __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "%s", msg.c_str());
+#endif
 }
 
 void Logger::warn(const string &msg) {
+#ifndef __ANDROID__
     cerr << "Graphics Warn: " << msg << endl;
+#else
+    __android_log_print(ANDROID_LOG_WARN, LOG_TAG, "%s", msg.c_str());
+#endif
 }
 
 void Logger::message(const std::string& msg)
 {
+#ifndef __ANDROID__
     cout << "Graphics Message: " << msg << endl;
+#else
+    __android_log_print(ANDROID_LOG_INFO, LOG_TAG, "%s", msg.c_str());
+#endif
 }
 
 Performance::Performance(std::string name)

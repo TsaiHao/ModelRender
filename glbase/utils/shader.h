@@ -38,9 +38,9 @@ public:
     GLuint getProgram() const;
 
 private:
-    void checkCompileErrors(unsigned int shader, std::string type) const;
+    static void checkCompileErrors(unsigned int shader, std::string type) ;
     GLint getUniformLocation(const std::string &name) const;
-    void modifyShaderVersion(std::string &shader) const;
+    static void modifyShaderVersion(std::string &shader) ;
 
     GLuint vertShader;
     GLuint fragShader;

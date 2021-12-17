@@ -2,7 +2,6 @@
 
 #include "obj_render.h"
 
-#include <utility>
 #include "cgutils.h"
 #include "shader.h"
 
@@ -89,12 +88,27 @@ void ObjRender::attachShader(const std::string &vsFile, const std::string &fsFil
     emplaceAnimator();
 }
 
-shared_ptr<Shader> ObjRender::getShader() {
+shared_ptr<Shader> ObjRender::getShader() const {
     return shader;
 }
 
 void ObjRender::emplaceAnimator() {
     animator = ObjAnimator(shader);
+}
+
+ObjRender::ObjRender(const ObjRender& rhs) {
+    *this = rhs;
+}
+
+ObjRender &ObjRender::operator=(const ObjRender &rhs) {
+    if (&rhs == this) {
+        return *this;
+    }
+    glObject = make_unique<GLObject>();
+    *glObject = *(rhs.glObject);
+    obj = rhs.obj;
+    vertices = rhs.vertices;
+    return *this;
 }
 
 ObjRender::~ObjRender() = default;

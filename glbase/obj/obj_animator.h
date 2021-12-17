@@ -22,7 +22,7 @@ class AnimatorActor {
 public:
     static std::shared_ptr<AnimatorActor> getActor(AnimationType t, const std::string &i);
 
-    AnimatorActor(AnimationType t, const std::string &i);
+    AnimatorActor(AnimationType t, std::string i);
 
     virtual void onNotifyTime(double renderTime);
 
@@ -63,7 +63,7 @@ protected:
 
 class AnimatorRotator : public AnimatorActor {
 public:
-    AnimatorRotator(AnimationType t, const std::string &i) : AnimatorActor(t, i) {}
+    AnimatorRotator(AnimationType t, const std::string &i);
 
     void setOrigin(const Vec3 &v) override;
 

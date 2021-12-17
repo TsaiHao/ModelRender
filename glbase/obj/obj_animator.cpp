@@ -1,4 +1,6 @@
 #include "obj_animator.h"
+
+#include <utility>
 #include "cgutils.h"
 #include "shader.h"
 
@@ -7,7 +9,8 @@
 
 using namespace std;
 
-ObjAnimator::ObjAnimator(std::shared_ptr<Shader> s, const std::string& mvpMatrixName): mvpUniformName(mvpMatrixName), mvp(glm::mat4(1.0f)) {
+ObjAnimator::ObjAnimator(std::shared_ptr<Shader> s, const std::string &mvpMatrixName) : mvpUniformName(mvpMatrixName),
+                                                                                        mvp(glm::mat4(1.0f)) {
     shader = s;
 
     if (s->getProgram() < 0 || mvpMatrixName.empty()) {
@@ -15,13 +18,13 @@ ObjAnimator::ObjAnimator(std::shared_ptr<Shader> s, const std::string& mvpMatrix
     }
 }
 
-void ObjAnimator::addDynamicActor(const ActorType& actor) {
-    dynamicActors.push_back(std::move(actor));
+void ObjAnimator::addDynamicActor(const ActorType &actor) {
+    dynamicActors.push_back(actor);
 }
 
 void ObjAnimator::doProcess() {
     mvp = glm::mat4(1.0f);
-    for (auto&& actor : dynamicActors) {
+    for (auto &&actor: dynamicActors) {
         actor->onNotifyTime(getTime());
         actor->onProcess(mvp);
     }
@@ -30,31 +33,29 @@ void ObjAnimator::doProcess() {
     _glCheckError();
 }
 
-shared_ptr<AnimatorActor> AnimatorActor::getActor(const AnimationType t, const std::string& i)
-{
+shared_ptr<AnimatorActor> AnimatorActor::getActor(const AnimationType t, const std::string &i) {
     shared_ptr<AnimatorActor> actor = nullptr;
     switch (t) {
-    case AnimationType::Rotate:
-        actor = make_unique<AnimatorRotator>(t, i);
-        Logger::message("get a rotate actor, id " + i);
-        break;
-    case AnimationType::Scale:
-        Logger::message("get a scale actor, id " + i);
-        actor = make_unique<AnimatorActor>(t, i);
-        break;
-    case AnimationType::Translate:
-        Logger::message("get a translate actor, id " + i);
-        actor = make_unique<AnimatorActor>(t, i);
-        break;
-    default:
-        Logger::error("unknown actor type: %d", t);
-        break;
+        case AnimationType::Rotate:
+            actor = make_unique<AnimatorRotator>(t, i);
+            Logger::message("get a rotate actor, id " + i);
+            break;
+        case AnimationType::Scale:
+            Logger::message("get a scale actor, id " + i);
+            actor = make_unique<AnimatorActor>(t, i);
+            break;
+        case AnimationType::Translate:
+            Logger::message("get a translate actor, id " + i);
+            actor = make_unique<AnimatorActor>(t, i);
+            break;
+        default:
+            Logger::error("unknown actor type: %d", t);
+            break;
     }
     return actor;
 }
 
-AnimatorActor::AnimatorActor(const AnimationType t, const std::string& i): type(t), id(i)
-{
+AnimatorActor::AnimatorActor(const AnimationType t, std::string i) : type(t), id(std::move(i)) {
 }
 
 inline void AnimatorActor::onNotifyTime(double renderTime) {
@@ -64,20 +65,17 @@ inline void AnimatorActor::onNotifyTime(double renderTime) {
     ++frameCount;
 }
 
-void AnimatorActor::setOrigin(const Vec3& og)
-{
+void AnimatorActor::setOrigin(const Vec3 &og) {
     origin = og;
     curState = og;
     direction = glm::normalize(og);
 }
 
-void AnimatorActor::onProcess(Mat4& mvp)
-{
+void AnimatorActor::onProcess(Mat4 &mvp) {
     curState = curState + (speed * direction * deltaTime);
     if (type == AnimationType::Translate) {
         mvp = glm::translate(mvp, curState);
-    }
-    else if (type == AnimationType::Scale) {
+    } else if (type == AnimationType::Scale) {
         mvp = glm::scale(mvp, curState);
     }
 }
@@ -95,11 +93,17 @@ void AnimatorActor::checkPeriod() {
 }
 
 void AnimatorRotator::onProcess(Mat4 &mvp) {
-    curState += Vec3(1.0f, 0, 0) * speed * deltaTime;
+    if (frameCount > 1) {
+        curState += Vec3(1.0f, 0, 0) * speed * deltaTime;
+    }
     mvp = glm::rotate(mvp, curState[0], origin);
 }
 
 void AnimatorRotator::setOrigin(const Vec3 &v) {
     origin = glm::normalize(v);
     curState = {0, 0, 0};
+}
+
+AnimatorRotator::AnimatorRotator(AnimationType t, const string &i) : AnimatorActor(t, i) {
+    curState = Vec3(0, 0, 0);
 }

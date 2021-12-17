@@ -9,6 +9,8 @@
 
 #define VPTR(x) (glm::value_ptr(x))
 
+#define LOG_TAG "GLBASE"
+
 #define ROTATE_ANGLE_KEY 0x1
 
 #endif //GRAPHICS_CGMACROS_H

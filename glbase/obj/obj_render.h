@@ -14,13 +14,15 @@ class ObjRender {
 public:
     explicit ObjRender(std::shared_ptr<ObjLoader> loader);
     explicit ObjRender(std::string const& objFile, const std::string &vsFile = "", const std::string& fsFile = "");
+    ObjRender(const ObjRender& rhs);
+    ObjRender& operator=(const ObjRender &rhs);
     ~ObjRender();
 
     void bufferData();
     void draw();
 
     void attachShader(const std::string& vsFile, const std::string& fsFile);
-    std::shared_ptr<Shader> getShader();
+    std::shared_ptr<Shader> getShader() const;
 
 public:
     std::shared_ptr<Shader> shader;

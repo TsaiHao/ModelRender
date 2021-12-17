@@ -65,27 +65,31 @@ void Shader::attachTexture(const std::string &texName, const Texture &tex) {
     }
 
     use();
-    setInt(texName.c_str(), textures.size());
+    setInt(texName, textures.size());
     textures.emplace_back(tex);
     Logger::message("shader " + to_string(program) + " attach tex " + to_string(tex.getTexture()));
 }
 
-void Shader::checkCompileErrors(unsigned int shader, std::string type) const {
+void Shader::checkCompileErrors(unsigned int shader, std::string type) {
     int success;
     char infoLog[1024];
     if (type != "PROGRAM") {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success) {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog
+            stringstream ss;
+            ss << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog
                       << "\n -- --------------------------------------------------- -- " << std::endl;
+            Logger::error(ss.str());
         }
     } else {
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
         if (!success) {
+            stringstream ss;
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-            std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog
+            ss << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog
                       << "\n -- --------------------------------------------------- -- " << std::endl;
+            Logger::error(ss.str());
         }
     }
 }
@@ -125,7 +129,7 @@ void Shader::setInt(const string &name, int value) const {
     glUniform1i(getUniformLocation(name), value);
 }
 
-void Shader::modifyShaderVersion(std::string &shader) const {
+void Shader::modifyShaderVersion(std::string &shader) {
     if (shader.empty()) {
         return;
     }
@@ -139,7 +143,7 @@ void Shader::modifyShaderVersion(std::string &shader) const {
     }
 
 #if defined(__ANDROID__) || defined(__IOS__)
-    shader = string("#version 300 es") + shader;
+    shader = string("#version 300 es\n") + shader;
 #else
     shader = string("#version 330 core\n") + shader;
 #endif
