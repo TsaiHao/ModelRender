@@ -1,7 +1,7 @@
 set(LIB_NAME glbase)
 
 if (GEN_EXE)
-    add_subdirectory(glfw)
+    add_subdirectory(thirdparty/glfw)
 endif()
 
 option(MOBILE_PLATFORM off)
@@ -18,7 +18,7 @@ set(UTIL_SOURCE_FILES
         utils/shader.cpp)
 
 list(APPEND GL_INCLUDE_DIR
-        glm
+        thirdparty/glm
         obj
         utils
         ${CMAKE_SOURCE_DIR})
@@ -27,20 +27,21 @@ if (MOBILE_PLATFORM)
     set(GLAD_SOURCE_FILES )
 else()
     set(GLAD_SOURCE_FILES
-            glad/src/glad.c)
-    list(APPEND GL_INCLUDE_DIR glad/include)
+            thirdparty/glad/src/glad.c)
+    list(APPEND GL_INCLUDE_DIR thirdparty/glad/include)
 endif()
 
 add_library(${LIB_NAME} SHARED ${UTIL_SOURCE_FILES} ${OBJ_SOURCE_FILES} ${GLAD_SOURCE_FILES})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Android")
-    target_link_libraries(${LIB_NAME} GLESv3)
+    find_library(log-lib log)
+    target_link_libraries(${LIB_NAME} GLESv3 android ${log-lib})
 endif()
 
 if (GEN_EXE)
     add_compile_definitions(USE_GLFW)
     target_link_libraries(${LIB_NAME} glfw)
-    list(APPEND GL_INCLUDE_DIR glfw/include)
+    list(APPEND GL_INCLUDE_DIR thirdparty/glfw/include)
 endif()
 
 include_directories(${GL_INCLUDE_DIR})

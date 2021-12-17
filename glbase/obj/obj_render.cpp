@@ -47,7 +47,7 @@ void ObjRender::bufferData() {
         }
     }
 
-    printVertices("verts.txt", vertices, 10);
+    //printVertices("verts.txt", vertices, 10);
 
     glObject = make_unique<GLObject>();
     glGenVertexArrays(1, &(glObject->VAO));
@@ -109,6 +109,10 @@ ObjRender &ObjRender::operator=(const ObjRender &rhs) {
     obj = rhs.obj;
     vertices = rhs.vertices;
     return *this;
+}
+
+void ObjRender::addAnimationActor(const shared_ptr<AnimatorActor> &actor) {
+    animator.addDynamicActor(actor);
 }
 
 ObjRender::~ObjRender() = default;

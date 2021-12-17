@@ -7,7 +7,6 @@
 #include "cgutils.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-
 #include "stb_image.h"
 
 #include "glm/glm.hpp"

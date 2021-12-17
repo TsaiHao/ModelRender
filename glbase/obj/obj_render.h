@@ -24,6 +24,11 @@ public:
     void attachShader(const std::string& vsFile, const std::string& fsFile);
     std::shared_ptr<Shader> getShader() const;
 
+    void addAnimationActor(const std::shared_ptr<AnimatorActor> &actor);
+    Vec3 getCurrentPosition();
+    Vec3 getCurrentRotation();
+    Vec3 getCurrentScale();
+
 public:
     std::shared_ptr<Shader> shader;
     ObjAnimator animator;

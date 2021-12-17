@@ -24,8 +24,9 @@ void ObjAnimator::addDynamicActor(const ActorType &actor) {
 
 void ObjAnimator::doProcess() {
     mvp = glm::mat4(1.0f);
+    auto time = getTime();
     for (auto &&actor: dynamicActors) {
-        actor->onNotifyTime(getTime());
+        actor->onNotifyTime(time);
         actor->onProcess(mvp);
     }
 
@@ -37,16 +38,16 @@ shared_ptr<AnimatorActor> AnimatorActor::getActor(const AnimationType t, const s
     shared_ptr<AnimatorActor> actor = nullptr;
     switch (t) {
         case AnimationType::Rotate:
-            actor = make_unique<AnimatorRotator>(t, i);
+            actor = make_shared<AnimatorRotator>(t, i);
             Logger::message("get a rotate actor, id " + i);
             break;
         case AnimationType::Scale:
             Logger::message("get a scale actor, id " + i);
-            actor = make_unique<AnimatorActor>(t, i);
+            actor = make_shared<AnimatorActor>(t, i);
             break;
         case AnimationType::Translate:
             Logger::message("get a translate actor, id " + i);
-            actor = make_unique<AnimatorActor>(t, i);
+            actor = make_shared<AnimatorActor>(t, i);
             break;
         default:
             Logger::error("unknown actor type: %d", t);

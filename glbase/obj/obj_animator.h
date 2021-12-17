@@ -7,7 +7,7 @@
 #include <any>
 #include <memory>
 
-#include "../glm/glm/glm.hpp"
+#include "../thirdparty/glm/glm/glm.hpp"
 
 class Shader;
 

@@ -1,4 +1,3 @@
-using namespace std;
 #include "glbase/glbase.h"
 
 int main(int argc, char **argv)
@@ -12,13 +11,16 @@ int main(int argc, char **argv)
     trans->setOrigin({0, 0.2f, 0});
     trans->setSpeed(0);
     auto scale = AnimatorActor::getActor(AnimationType::Scale, "scale");
-    scale->setOrigin({ 0.25f, 0.25f, 0.25f });
+    scale->setOrigin({ 0.1f, 0.1f, 0.1f });
     scale->setSpeed(0);
     auto rotate = AnimatorActor::getActor(AnimationType::Rotate, "rotate");
     rotate->setOrigin({0.5f, 0.7f, 0.9f});
-    rotate->setSpeed(0.1f);
+    rotate->setSpeed(0.9f);
+    auto trans2 = AnimatorActor::getActor(AnimationType::Translate, "trans2");
+    trans2->setOrigin({0.5f, 0, 0});
     lightSource.animator.addDynamicActor(trans);
     lightSource.animator.addDynamicActor(rotate);
+    lightSource.animator.addDynamicActor(trans2);
     lightSource.animator.addDynamicActor(scale);
 
     while (true)

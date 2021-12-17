@@ -10,7 +10,7 @@
 #include <cstdio>
 
 #ifndef __ANDROID__
-#include "../glad/include/glad/glad.h"
+#include "../thirdparty/glad/include/glad/glad.h"
 #else
 #include "GLES3/gl3.h"
 #endif
