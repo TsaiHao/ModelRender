@@ -7,6 +7,7 @@ set(GL_LIBRARY glbase)
 option(GEN_EXE "generate executable" off)
 
 add_subdirectory(glbase)
+include_directories(glbase)
 
 if (GEN_EXE)
 	add_compile_definitions(USE_GLFW)
