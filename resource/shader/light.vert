@@ -7,9 +7,10 @@ out vec3 vertNorm;
 out vec4 vertPos;
 
 uniform mat4 mvp;
+uniform mat4 camera;
 
 void main() {
-    gl_Position = mvp * pos;
+    gl_Position = mvp * camera * pos;
     vertPos = gl_Position;
     texCoord = tex;
     vertNorm = norm;
