@@ -1,13 +1,21 @@
-//
-// Created by zaijun on 2021/12/26.
-//
-
 #ifndef GRAPHICS_SCENE_H
 #define GRAPHICS_SCENE_H
 
+#include <vector>
+#include <memory>
 
-class scene {
+#include "camera.h"
 
+class ObjRender;
+
+class Scene {
+public:
+    Scene();
+    ~Scene();
+
+private:
+    std::vector<std::shared_ptr<ObjRender>> models;
+    Camera cam;
 };
 
 

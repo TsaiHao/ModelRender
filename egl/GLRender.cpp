@@ -73,7 +73,7 @@ void GLRender::initGL() {
         return;
     }
     glWindowInit();
-    render = make_shared<ObjRender>("/sdcard/resource/model/cube.obj.mp4", "/sdcard/resource/shader/plain.vs.mp4", "/sdcard/resource/shader/plain.fs.mp4");
+    render = make_shared<ObjRender>("/sdcard/resource/model/cube.obj.mp4", "/sdcard/resource/shader/plain.vert.mp4", "/sdcard/resource/shader/plain.frag.mp4");
     render->shader->attachTexture("texture1", Texture("/sdcard/resource/texture/wall.jpg.mp4"));
 
     auto trans = AnimatorActor::getActor(AnimationType::Translate, "trans");

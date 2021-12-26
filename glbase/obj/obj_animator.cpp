@@ -93,8 +93,20 @@ void AnimatorActor::checkPeriod() {
     }
 }
 
+void AnimatorActor::setPeriod(const float p) {
+    periodTime = p;
+}
+
+void AnimatorActor::setSpeed(const float s) {
+    speed = s;
+}
+
+void AnimatorActor::setExtra(const string &configKey, const any &value) {
+
+}
+
 void AnimatorRotator::onProcess(Mat4 &mvp) {
-    if (frameCount > 1) {
+    if (frameCount > 1 && FLOAT_EQUAL(speed, 0)) {
         curState += Vec3(1.0f, 0, 0) * speed * deltaTime;
     }
     mvp = glm::rotate(mvp, curState[0], origin);
@@ -107,4 +119,12 @@ void AnimatorRotator::setOrigin(const Vec3 &v) {
 
 AnimatorRotator::AnimatorRotator(AnimationType t, const string &i) : AnimatorActor(t, i) {
     curState = Vec3(0, 0, 0);
+}
+
+void AnimatorRotator::setExtra(const string &configKey, const any &value) {
+    AnimatorActor::setExtra(configKey, value);
+    if (configKey == ROTATE_STATIC_ANGLE) {
+        staticAngle = any_cast<float>(value);
+        curState = Vec3(staticAngle, 0, 0);
+    }
 }

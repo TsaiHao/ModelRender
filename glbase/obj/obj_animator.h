@@ -29,13 +29,11 @@ public:
     // origin is direction for translate, pivot for rotate
     virtual void setOrigin(const Vec3 &);
 
-    virtual void setSpeed(const float s) {
-        speed = s;
-    }
+    virtual void setSpeed(const float s);
 
-    virtual void setPeriod(const float p) {
-        periodTime = p;
-    }
+    virtual void setExtra(const std::string &configKey, const std::any &value);
+
+    virtual void setPeriod(const float p);
     //virtual void setExternal(const std::string& key, const std::any& value) {}
 
     virtual void onProcess(Mat4 &mvp);
@@ -68,6 +66,11 @@ public:
     void setOrigin(const Vec3 &v) override;
 
     void onProcess(Mat4 &mvp) override;
+
+    void setExtra(const std::string &configKey, const std::any &value) override;
+
+private:
+    float staticAngle = 0;
 };
 
 class ObjAnimator {

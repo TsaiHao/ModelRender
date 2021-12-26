@@ -9,8 +9,10 @@
 
 #define VPTR(x) (glm::value_ptr(x))
 
+#define FLOAT_EQUAL(x, y) (abs(x - y) < 1e6)
+
 #define LOG_TAG "GLBASE"
 
-#define ROTATE_ANGLE_KEY 0x1
+#define ROTATE_STATIC_ANGLE "rotate_static_angle"
 
 #endif //GRAPHICS_CGMACROS_H

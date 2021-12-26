@@ -10,3 +10,6 @@
 #include "obj/obj_render.h"
 
 #include "utils/shader.h"
+
+#include "scene/camera.h"
+#include "scene/scene.h"

@@ -1,10 +1,11 @@
 #include "glbase/glbase.h"
+#include <iostream>
 
 int main(int argc, char **argv)
 {
     WindowType window = glWindowInit();
 
-    ObjRender lightSource("resource/model/cube.obj", "resource/shader/plain.vs", "resource/shader/plain.fs");
+    ObjRender lightSource("resource/model/cube.obj", "resource/shader/plain.vert", "resource/shader/plain.frag");
     lightSource.shader->attachTexture("texture1", Texture("resource/texture/wall.jpg"));
 
     auto trans = AnimatorActor::getActor(AnimationType::Translate, "trans");
@@ -23,12 +24,19 @@ int main(int argc, char **argv)
     lightSource.animator.addDynamicActor(trans2);
     lightSource.animator.addDynamicActor(scale);
 
-    while (true)
+    ObjRender cylinder("resource/model/cube.obj", "resource/shader/light.vert", "resource/shader/light.frag");
+    //cylinder.shader->attachTexture("texture1", Texture("resource/texture/wall.jpg"));
+    auto cyScale = AnimatorActor::getActor(AnimationType::Scale, "cylinder-scale");
+    cyScale->setOrigin({0.3f, 0.3f, 0.3f});
+    cylinder.addAnimationActor(cyScale);
+
+    while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.f, 0.f, 0.f, 1.0f);
+        glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
 
         lightSource.draw();
+        cylinder.draw();
     
         glfwSwapBuffers(window);
         glfwPollEvents();

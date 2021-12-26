@@ -7,7 +7,7 @@
 #include "cgutils.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "glbase/thirdparty/stb/stb_image.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -80,6 +80,7 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type) {
             ss << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog
                       << "\n -- --------------------------------------------------- -- " << std::endl;
             Logger::error(ss.str());
+            abort();
         }
     } else {
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
@@ -89,6 +90,7 @@ void Shader::checkCompileErrors(unsigned int shader, std::string type) {
             ss << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog
                       << "\n -- --------------------------------------------------- -- " << std::endl;
             Logger::error(ss.str());
+            abort();
         }
     }
 }

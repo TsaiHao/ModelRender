@@ -9,5 +9,6 @@ uniform vec3 lightPos;
 
 void main() {
     vec4 basicColor = vec4(1.0f, 0.5f, 0.3f, 1.0f);
+    vec4 texColor = texture(texture1, texCoord.xy);
     fragColor = basicColor;
 }
