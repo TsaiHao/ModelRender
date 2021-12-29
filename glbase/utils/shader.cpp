@@ -150,6 +150,24 @@ void Shader::modifyShaderVersion(std::string &shader) {
 #endif
 }
 
+std::vector<std::string> Shader::getAllUniformList() const {
+    vector<string> names;
+    GLsizei size = 100, len = 0;
+    GLint sz = 0;
+    GLenum en;
+    GLchar buffer[100];
+
+    GLint count;
+    glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
+
+    for (GLuint i = 0; i < count; ++i) {
+        glGetActiveUniform(program, i, size, &len, &sz, &en, buffer);
+        names.emplace_back(string(buffer, buffer + len));
+    }
+
+    return names;
+}
+
 Texture::Texture(const std::string &imagePath) {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);

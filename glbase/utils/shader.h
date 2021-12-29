@@ -37,6 +37,9 @@ public:
 
     GLuint getProgram() const;
 
+#pragma mark for debug use
+    std::vector<std::string> getAllUniformList() const;
+
 private:
     static void checkCompileErrors(unsigned int shader, std::string type) ;
     GLint getUniformLocation(const std::string &name) const;

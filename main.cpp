@@ -25,7 +25,11 @@ int main(int argc, char **argv)
     lightSource.animator.addDynamicActor(scale);
 
     ObjRender cylinder("resource/model/cube.obj", "resource/shader/light.vert", "resource/shader/light.frag");
-    //cylinder.shader->attachTexture("texture1", Texture("resource/texture/wall.jpg"));
+    auto names = cylinder.shader->getAllUniformList();
+    for (auto&& name : names) {
+        std::cout << "name: " << name << std::endl;
+    }
+    cylinder.shader->attachTexture("texture1", Texture("resource/texture/wall.jpg"));
     auto cyScale = AnimatorActor::getActor(AnimationType::Scale, "cylinder-scale");
     cyScale->setOrigin({0.3f, 0.3f, 0.3f});
     cylinder.addAnimationActor(cyScale);
@@ -33,7 +37,7 @@ int main(int argc, char **argv)
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
+        glClearColor(0.1f, 0.2f, 0.4f, 1.0f);
 
         lightSource.draw();
         cylinder.draw();

@@ -4,3 +4,5 @@ glfw
 glad
 glm
 .idea
+.gitignore
+.vscode
