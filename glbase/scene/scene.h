@@ -4,18 +4,22 @@
 #include <vector>
 #include <memory>
 
-#include "camera.h"
-
 class ObjRender;
+class Camera;
 
 class Scene {
 public:
-    Scene();
+    explicit Scene( std::unique_ptr<Camera> cam = nullptr);
     ~Scene();
 
+    void drawFrame();
+
 private:
+    void updateViewMatrix();
+    void updateModelMatrix();
+    void doDrawFrame();
     std::vector<std::shared_ptr<ObjRender>> models;
-    Camera cam;
+    std::unique_ptr<Camera> camera;
 };
 
 

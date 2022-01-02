@@ -22,6 +22,8 @@ public:
     void draw();
 
     void attachShader(const std::string& vsFile, const std::string& fsFile);
+    void setViewMatrix(const float* mat) const;
+    void setModelMatrix(const float* mat) const;
     std::shared_ptr<Shader> getShader() const;
 
     void addAnimationActor(const std::shared_ptr<AnimatorActor> &actor);

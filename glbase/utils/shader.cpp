@@ -22,24 +22,7 @@ Shader::Shader(const string &vertFile, const string &fragFile) {
     modifyShaderVersion(fragStr);
     assert(!vertStr.empty() && !fragStr.empty());
 
-    vertShader = glCreateShader(GL_VERTEX_SHADER);
-    const char *vertChars = vertStr.c_str();
-    glShaderSource(vertShader, 1, &(vertChars), NULL);
-    glCompileShader(vertShader);
-    checkCompileErrors(vertShader, "VERTEX");
-
-    fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-    const char *fragChars = fragStr.c_str();
-    glShaderSource(fragShader, 1, &(fragChars), NULL);
-    glCompileShader(fragShader);
-    checkCompileErrors(fragShader, "FRAGMENT");
-
-    program = glCreateProgram();
-    glAttachShader(program, vertShader);
-    glAttachShader(program, fragShader);
-    glLinkProgram(program);
-    checkCompileErrors(program, "PROGRAM");
-    _glCheckError();
+    compileAndLinkShader(vertStr, fragStr);
 }
 
 Shader::~Shader() {
@@ -143,7 +126,7 @@ void Shader::modifyShaderVersion(std::string &shader) {
         return;     // use shader version
     }
 
-#if defined(__ANDROID__) || defined(__IOS__)
+#if defined(__ANDROID__)
     shader = string("#version 300 es\n") + shader;
 #else
     shader = string("#version 330 core\n") + shader;
@@ -166,6 +149,48 @@ std::vector<std::string> Shader::getAllUniformList() const {
     }
 
     return names;
+}
+
+void Shader::compileAndLinkShader(const std::string &vertSource, const std::string &fragSource) {
+    vertShader = glCreateShader(GL_VERTEX_SHADER);
+    const char *vertChars = vertSource.c_str();
+    glShaderSource(vertShader, 1, &(vertChars), nullptr);
+    glCompileShader(vertShader);
+    checkCompileErrors(vertShader, "VERTEX");
+
+    fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+    const char *fragChars = fragSource.c_str();
+    glShaderSource(fragShader, 1, &(fragChars), nullptr);
+    glCompileShader(fragShader);
+    checkCompileErrors(fragShader, "FRAGMENT");
+
+    program = glCreateProgram();
+    glAttachShader(program, vertShader);
+    glAttachShader(program, fragShader);
+    glLinkProgram(program);
+    checkCompileErrors(program, "PROGRAM");
+    _glCheckError();
+}
+
+void Shader::setModelMatrix(const float* mat) {
+    // TODO: use data member to optimize performance
+    auto iter = uniformMap.find(MODEL_UNIFORM);
+    if (iter == uniformMap.end()) {
+        auto loc = getUniformLocation(MODEL_UNIFORM);
+        uniformMap.emplace(MODEL_UNIFORM, loc);
+        iter = uniformMap.find(MODEL_UNIFORM);
+    }
+    glUniformMatrix4fv(iter->second, 1, GL_FALSE, mat);
+}
+
+void Shader::setViewMatrix(const float *mat) {
+    auto iter = uniformMap.find(VIEW_UNIFORM);
+    if (iter == uniformMap.end()) {
+        auto loc = getUniformLocation(VIEW_UNIFORM);
+        uniformMap.emplace(VIEW_UNIFORM, loc);
+        iter = uniformMap.find(VIEW_UNIFORM);
+    }
+    glUniformMatrix4fv(iter->second, 1, GL_FALSE, mat);
 }
 
 Texture::Texture(const std::string &imagePath) {

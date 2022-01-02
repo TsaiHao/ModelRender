@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <array>
+#include <string>
 
 class Shader;
 class Camera {
@@ -12,8 +13,11 @@ public:
 
     //Camera();
     Camera(const Vec3 &pos, const Vec3 &target, const Vec3 &up);
+    Camera(const Camera& rhs);
+    Camera& operator=(const Camera& rhs);
+    ~Camera();
     
-    void attachShader(const std::shared_ptr<Shader> &sd, const std::string uf = "camera");
+    void attachShader(const std::shared_ptr<Shader> &sd, const std::string& uf = "camera");
     
     void setCameraVector(const Vec3 &pos, const Vec3 &target, const Vec3 &up);
 

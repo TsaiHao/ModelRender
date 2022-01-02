@@ -115,4 +115,12 @@ void ObjRender::addAnimationActor(const shared_ptr<AnimatorActor> &actor) {
     animator.addDynamicActor(actor);
 }
 
+void ObjRender::setViewMatrix(const float *mat) const {
+    shader->setViewMatrix(mat);
+}
+
+void ObjRender::setModelMatrix(const float *mat) const {
+    shader->setModelMatrix(mat);
+}
+
 ObjRender::~ObjRender() = default;

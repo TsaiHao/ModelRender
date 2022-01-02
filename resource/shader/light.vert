@@ -6,12 +6,12 @@ out vec3 texCoord;
 out vec3 vertNorm;
 out vec4 vertPos;
 
-uniform mat4 mvp;
-uniform mat4 camera;
+uniform mat4 model;
+uniform mat4 view;
 
 void main() {
     //gl_Position = mvp * camera * pos;
-    gl_Position = mvp * pos;
+    gl_Position = model * pos;
     vertPos = gl_Position;
     texCoord = tex;
     vertNorm = norm;

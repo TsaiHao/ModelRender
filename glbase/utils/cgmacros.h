@@ -15,4 +15,8 @@
 
 #define ROTATE_STATIC_ANGLE "rotate_static_angle"
 
+// uniform names
+#define MODEL_UNIFORM "model"
+#define VIEW_UNIFORM "view"
+
 #endif //GRAPHICS_CGMACROS_H

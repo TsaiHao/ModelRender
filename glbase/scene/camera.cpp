@@ -11,7 +11,7 @@ Camera::Camera(const Camera::Vec3 &pos, const Camera::Vec3 &target, const Camera
     setCameraVector(pos, target, up);
 }
 
-void Camera::attachShader(const std::shared_ptr<Shader> &sd, const std::string uf) {
+void Camera::attachShader(const std::shared_ptr<Shader> &sd, const std::string& uf) {
     this->shader = sd;
     this->uniform = uf;
     updateUniform();
@@ -41,3 +41,22 @@ void Camera::updateUniform() const {
                               glm::vec3(cameraUp[0], cameraUp[1], cameraUp[2]));
     shader->setMat4(uniform, VPTR(camMat));
 }
+
+Camera::Camera(const Camera &rhs) {
+    *this = rhs;
+}
+
+Camera &Camera::operator=(const Camera &rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+
+    shader = rhs.shader;
+    cameraPosition = rhs.cameraPosition;
+    cameraTarget = rhs.cameraTarget;
+    cameraUp = rhs.cameraUp;
+    uniform = rhs.uniform;
+    return *this;
+}
+
+Camera::~Camera() = default;
