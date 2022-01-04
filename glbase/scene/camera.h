@@ -6,7 +6,7 @@
 #include <array>
 #include <string>
 
-class Shader;
+class CameraData;
 class Camera {
 public:
     using Vec3 = std::array<float, 3>;
@@ -17,24 +17,16 @@ public:
     Camera& operator=(const Camera& rhs);
     ~Camera();
     
-    void attachShader(const std::shared_ptr<Shader> &sd, const std::string& uf = "camera");
-    
     void setCameraVector(const Vec3 &pos, const Vec3 &target, const Vec3 &up);
 
     void setPosition(const Vec3 &pos);
     void setTarget(const Vec3 &target);
     void setUp(const Vec3 &up);
 
-    void updateUniform() const;
-    
+    const float* getViewMatrix() const;
+
 private:
-    std::shared_ptr<Shader> shader;
-
-    Vec3 cameraPosition;
-    Vec3 cameraTarget;
-    Vec3 cameraUp;
-
-    std::string uniform;
+    std::unique_ptr<CameraData> data;
 };
 
 

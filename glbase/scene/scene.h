@@ -6,13 +6,16 @@
 
 class ObjRender;
 class Camera;
+class GLContext;
 
 class Scene {
 public:
-    explicit Scene( std::unique_ptr<Camera> cam = nullptr);
+    explicit Scene(std::unique_ptr<GLContext>& context, std::unique_ptr<Camera>& cam);
     ~Scene();
 
     void drawFrame();
+
+    void initGLContext();
 
 private:
     void updateViewMatrix();
@@ -20,6 +23,7 @@ private:
     void doDrawFrame();
     std::vector<std::shared_ptr<ObjRender>> models;
     std::unique_ptr<Camera> camera;
+    std::unique_ptr<GLContext> context;
 };
 
 

@@ -6,9 +6,10 @@ out vec3 texCoord;
 out vec3 vertNorm;
 
 uniform mat4 model;
+uniform mat4 view;
 
 void main() {
-    gl_Position = model * pos;
+    gl_Position = model * view * pos;
     texCoord = tex;
     vertNorm = norm;
 }

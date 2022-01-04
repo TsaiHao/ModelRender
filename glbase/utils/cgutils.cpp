@@ -11,58 +11,7 @@ struct strFinder {
     }
 };
 
-#ifdef USE_GLFW
-static void glfwErrorCallback(int error, const char* description)
-{
-    Logger::error(description);
-}
 
-static void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-}
-#endif
-
-WindowType glWindowInit()
-{
-    WindowType window = nullptr;
-
-#ifdef USE_GLFW
-    glfwSetErrorCallback(glfwErrorCallback);
-
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-    window = glfwCreateWindow(GL_WINDOW_WIDTH, GL_WINDOW_HEIGHT, "Model Render", NULL, NULL);
-    if (!window) {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-
-    glfwSetKeyCallback(window, glfwKeyCallback);
-    glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
-        glViewport(0, 0, width, height);
-    });
-
-    glfwMakeContextCurrent(window);
-#endif
-
-#ifndef __ANDROID__
-    gladLoadGL();
-#endif
-    glEnable(GL_DEPTH_TEST);
-
-    return window;
-}
 
 std::string readTextFile(const std::string &file) {
     std::ifstream ifs(file);
