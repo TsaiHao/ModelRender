@@ -18,7 +18,9 @@ public:
     ObjRender& operator=(const ObjRender &rhs);
     ~ObjRender();
 
+    // must call in gl thread
     void bufferData();
+
     void draw();
 
     void attachShader(const std::string& vsFile, const std::string& fsFile);

@@ -7,7 +7,14 @@ using namespace std;
 
 static void* glTask(void* asset) {
     auto scene = reinterpret_cast<Scene*>(asset);
-
+    auto& context = scene->getGLContext();
+    while (context) {
+        auto cmd = context->pickCommand();
+        switch (cmd) {
+            case GLTaskCommand::None:
+                pthread_cond_wait()
+        }
+    }
     return nullptr;
 }
 
@@ -90,6 +97,37 @@ GLContext::GLContext(): glThread(make_unique<GLThread>()),
 
 void GLContext::init() {
     glNative->initWindow();
+}
+
+void GLContext::makeCurrent() const {
+#ifdef USE_GLFW
+    glfwMakeContextCurrent(glNative->window);
+#else
+#endif
+}
+
+void GLContext::setMaxCommandCount(int n) {
+    std::lock_guard lock(queueMutex);
+    maxCommandCount = n;
+}
+
+GLTaskCommand GLContext::pickCommand() {
+    std::lock_guard lock(queueMutex);
+    if (queue.empty()) {
+        return GLTaskCommand::None;
+    }
+    GLTaskCommand cmd = queue.front();
+    queue.pop_front();
+    return cmd;
+}
+
+bool GLContext::pushCommand(GLTaskCommand cmd) {
+    std::lock_guard lock(queueMutex);
+    if (queue.size() > maxCommandCount) {
+        return false;
+    }
+    queue.push_back(cmd);
+    return true;
 }
 
 GLContext::~GLContext() = default;

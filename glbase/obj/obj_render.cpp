@@ -13,13 +13,11 @@ public:
 };
 
 ObjRender::ObjRender(std::shared_ptr<ObjLoader> loader) : obj(std::move(loader)) {
-    bufferData();
 }
 
 ObjRender::ObjRender(std::string const &objFile, const std::string &vsFile, const std::string &fsFile) {
     attachShader(vsFile, fsFile);
     obj = make_shared<ObjLoader>(objFile);
-    bufferData();
 }
 
 void ObjRender::bufferData() {

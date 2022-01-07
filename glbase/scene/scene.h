@@ -17,6 +17,10 @@ public:
 
     void initGLContext();
 
+    void initRenders();
+
+    const std::unique_ptr<GLContext>& getGLContext() const;
+
 private:
     void updateViewMatrix();
     void updateModelMatrix();

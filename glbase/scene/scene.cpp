@@ -54,3 +54,13 @@ void Scene::initGLContext() {
     context->init();
     Logger::message("GL context inited");
 }
+
+void Scene::initRenders() {
+    for (auto&& obj : models) {
+        obj->bufferData();
+    }
+}
+
+const std::unique_ptr<GLContext>& Scene::getGLContext() const {
+    return context;
+}
