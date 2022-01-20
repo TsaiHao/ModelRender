@@ -11,6 +11,8 @@ public:
     Texture(const Texture& tex);
     ~Texture() = default;
 
+    void init();
+
     void setParam(GLenum type, GLint value) const;
 
     GLuint getTexture() const;
@@ -18,6 +20,7 @@ public:
     void bind(int unit = 0) const;
 
 private:
+    std::string texFile;
     GLuint texture;
 };
 
@@ -28,6 +31,7 @@ public:
     Shader(const Shader& shd);
     ~Shader();
 
+    void init();
     void use(bool bindTextures = true) const;
 
     void setInt(const std::string &name, int value) const;
@@ -48,6 +52,8 @@ private:
     static void checkCompileErrors(unsigned int shader, std::string type) ;
     GLint getUniformLocation(const std::string &name) const;
     static void modifyShaderVersion(std::string &shader) ;
+
+    std::string vertSource, fragSource;
 
     GLuint vertShader;
     GLuint fragShader;

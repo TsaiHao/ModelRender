@@ -7,30 +7,31 @@
 
 Scene::~Scene() = default;
 
-Scene::Scene(std::unique_ptr<GLContext>& ctx, std::unique_ptr<Camera>& cam) {
+Scene::Scene(std::unique_ptr<Camera>& cam) {
     if (cam == nullptr) {
-        camera = std::move(cam);
-    } else {
         camera = std::make_unique<Camera>(
                 Camera::Vec3 {0, 0, 3},
                 Camera::Vec3 {0, 0, 0},
                 Camera::Vec3 {0, 1, 0}
-                );
-    }
-
-    if (ctx == nullptr) {
-        context = std::move(ctx);
+        );
     } else {
-        context = std::make_unique<GLContext>();
+        camera = std::move(cam);
     }
 
     Logger::message("camera initialize with %p", camera.get());
 }
 
 void Scene::drawFrame() {
+    if (context->getState() != GLContext::GLState::Drawing) {
+        return;
+    }
+    context->clearGLBuffer();
+
     updateViewMatrix();
     updateModelMatrix();
     doDrawFrame();
+
+    context->swapBuffer();
 }
 
 void Scene::updateViewMatrix() {
@@ -63,4 +64,17 @@ void Scene::initRenders() {
 
 const std::unique_ptr<GLContext>& Scene::getGLContext() const {
     return context;
+}
+
+void Scene::addModels(std::shared_ptr<ObjRender> &model) {
+    models.emplace_back(std::move(model));
+}
+
+void Scene::init() {
+    context->pushCommand(GLTaskCommand::Init);
+    Logger::message("scene init %p", (void*)this);
+}
+
+void Scene::draw() {
+    context->pushCommand(GLTaskCommand::Draw);
 }

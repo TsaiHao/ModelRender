@@ -2,36 +2,9 @@
 #include "gl_context.h"
 #include "cgutils.h"
 #include "scene.h"
+#include "gl_thread.h"
 
 using namespace std;
-
-static void* glTask(void* asset) {
-    auto scene = reinterpret_cast<Scene*>(asset);
-    auto& context = scene->getGLContext();
-    while (context) {
-        auto cmd = context->pickCommand();
-        switch (cmd) {
-            case GLTaskCommand::None:
-                pthread_cond_wait()
-        }
-    }
-    return nullptr;
-}
-
-class GLContext::GLThread {
-public:
-    GLThread() = default;
-
-    void init() {
-        pthread_create(&thread, nullptr, glTask, nullptr);
-        pthread_mutex_init(&mutex, nullptr);
-        Logger::message("gl thread create %ld", thread);
-    }
-
-    pthread_t  thread;
-    pthread_mutex_t mutex;
-};
-
 
 class GLContext::GLNativeContext {
 public:
@@ -78,6 +51,11 @@ public:
         glEnable(GL_DEPTH_TEST);
     }
 
+    void clearGLBuffer() const {
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        glClearColor(0.4f, 0.3f, 0.2f, 1.0f);
+    }
+
     void swapBuffer() const {
 #ifdef USE_GLFW
         glfwSwapBuffers(window);
@@ -89,14 +67,37 @@ public:
     WindowType window = nullptr;
 };
 
+class GLContext::ContextState {
+    pthread_rwlock_t lock;
+    GLState state;
+public:
+    ContextState() {
+        pthread_rwlock_init(&lock, nullptr);
+    }
+
+    GLState getState() {
+        pthread_rwlock_rdlock(&lock);
+        auto s = state;
+        pthread_rwlock_unlock(&lock);
+        return s;
+    }
+
+    void setState(GLState s) {
+        pthread_rwlock_wrlock(&lock);
+        state = s;
+        pthread_rwlock_unlock(&lock);
+    }
+};
+
 GLContext::GLContext(): glThread(make_unique<GLThread>()),
                         glNative(make_unique<GLNativeContext>()),
-                        state(GLState::Prepare) {
+                        state(make_unique<ContextState>()) {
 
 }
 
 void GLContext::init() {
     glNative->initWindow();
+    setState(GLState::Drawing);
 }
 
 void GLContext::makeCurrent() const {
@@ -114,6 +115,8 @@ void GLContext::setMaxCommandCount(int n) {
 GLTaskCommand GLContext::pickCommand() {
     std::lock_guard lock(queueMutex);
     if (queue.empty()) {
+        glThread->producerAwake();
+        glThread->consumerWait();
         return GLTaskCommand::None;
     }
     GLTaskCommand cmd = queue.front();
@@ -124,10 +127,27 @@ GLTaskCommand GLContext::pickCommand() {
 bool GLContext::pushCommand(GLTaskCommand cmd) {
     std::lock_guard lock(queueMutex);
     if (queue.size() > maxCommandCount) {
-        return false;
+        glThread->sleep(10000);
     }
     queue.push_back(cmd);
+    glThread->consumerAwake();
     return true;
+}
+
+void GLContext::swapBuffer() const {
+    glNative->swapBuffer();
+}
+
+void GLContext::clearGLBuffer() const {
+    glNative->clearGLBuffer();
+}
+
+GLContext::GLState GLContext::getState() const {
+    return state->getState();
+}
+
+void GLContext::setState(GLContext::GLState s) {
+    state->setState(s);
 }
 
 GLContext::~GLContext() = default;

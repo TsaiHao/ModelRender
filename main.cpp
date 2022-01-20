@@ -23,14 +23,21 @@ int main(int argc, char **argv)
     lightSource.animator.addDynamicActor(scale);
 
     ObjRender cylinder("resource/model/cube.obj", "resource/shader/light.vert", "resource/shader/light.frag");
-    auto names = cylinder.shader->getAllUniformList();
-    for (auto&& name : names) {
-        std::cout << "name: " << name << std::endl;
-    }
     cylinder.shader->attachTexture("texture1", Texture("resource/texture/wall.jpg"));
     auto cyScale = AnimatorActor::getActor(AnimationType::Scale, "cylinder-scale");
     cyScale->setOrigin({0.3f, 0.3f, 0.3f});
     cylinder.addAnimationActor(cyScale);
+
+    std::unique_ptr<Camera> cam = std::make_unique<Camera>(Camera::Vec3 {0, 0, 3},
+                                                           Camera::Vec3 {0, 0, 0},
+                                                           Camera::Vec3 {0, 1, 0});
+    Scene scene(cam);
+    scene.init();
+
+    int i = 0;
+    while (++i < 1000) {
+        scene.draw();
+    }
 
     glfwTerminate();
     exit(EXIT_SUCCESS);

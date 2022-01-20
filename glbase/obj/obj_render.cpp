@@ -15,12 +15,16 @@ public:
 ObjRender::ObjRender(std::shared_ptr<ObjLoader> loader) : obj(std::move(loader)) {
 }
 
-ObjRender::ObjRender(std::string const &objFile, const std::string &vsFile, const std::string &fsFile) {
-    attachShader(vsFile, fsFile);
-    obj = make_shared<ObjLoader>(objFile);
+ObjRender::ObjRender(std::string const &objFile, const std::string &vsFile, const std::string &fsFile) :
+    obj(make_shared<ObjLoader>(objFile)),
+    shader(make_shared<Shader>(vsFile, fsFile)){
 }
 
 void ObjRender::bufferData() {
+    if (!vertFile.empty() && !fragFile.empty()) {
+        attachShader(vertFile, fragFile);
+    }
+
     vertices.clear();
     vertices.reserve(100);
 
@@ -82,7 +86,7 @@ void ObjRender::draw() {
 }
 
 void ObjRender::attachShader(const std::string &vsFile, const std::string &fsFile) {
-    shader = make_shared<Shader>(vsFile, fsFile);
+    shader->init();
     emplaceAnimator();
 }
 

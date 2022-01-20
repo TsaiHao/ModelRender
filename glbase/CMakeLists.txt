@@ -21,7 +21,8 @@ set(UTIL_SOURCE_FILES
 set(SCENE_SOURCE_FILES
         scene/camera.cpp
         scene/scene.cpp
-        scene/gl_context.cpp)
+        scene/gl_context.cpp
+        scene/gl_thread.cpp)
 
 list(APPEND GL_INCLUDE_DIR
         thirdparty/glm

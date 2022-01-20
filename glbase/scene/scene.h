@@ -8,18 +8,32 @@ class ObjRender;
 class Camera;
 class GLContext;
 
+enum class GLTaskCommand {
+    Init,
+    Draw,
+    Pause,
+    Quit,
+    None,
+};
+
 class Scene {
 public:
-    explicit Scene(std::unique_ptr<GLContext>& context, std::unique_ptr<Camera>& cam);
+    explicit Scene(std::unique_ptr<Camera>& cam);
     ~Scene();
 
-    void drawFrame();
+    void init();
+
+    void draw();
 
     void initGLContext();
 
     void initRenders();
 
-    const std::unique_ptr<GLContext>& getGLContext() const;
+    void drawFrame();
+
+    [[nodiscard]] const std::unique_ptr<GLContext>& getGLContext() const;
+
+    void addModels(std::shared_ptr<ObjRender> &models);
 
 private:
     void updateViewMatrix();

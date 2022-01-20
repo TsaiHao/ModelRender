@@ -15,14 +15,7 @@
 
 using namespace std;
 
-Shader::Shader(const string &vertFile, const string &fragFile) {
-    string vertStr = readTextFile(vertFile);
-    string fragStr = readTextFile(fragFile);
-    modifyShaderVersion(vertStr);
-    modifyShaderVersion(fragStr);
-    assert(!vertStr.empty() && !fragStr.empty());
-
-    compileAndLinkShader(vertStr, fragStr);
+Shader::Shader(const string &vertFile, const string &fragFile): vertSource(vertFile), fragSource(fragFile) {
 }
 
 Shader::~Shader() {
@@ -30,8 +23,6 @@ Shader::~Shader() {
 }
 
 void Shader::use(const bool bindTextures) const {
-    _glCheckError();
-
     glUseProgram(program);
     if (bindTextures) {
         for (int i = 0; i < textures.size(); ++i) {
@@ -193,23 +184,21 @@ void Shader::setViewMatrix(const float *mat) {
     glUniformMatrix4fv(iter->second, 1, GL_FALSE, mat);
 }
 
-Texture::Texture(const std::string &imagePath) {
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+void Shader::init() {
+    string vertStr = readTextFile(vertSource);
+    string fragStr = readTextFile(fragSource);
+    modifyShaderVersion(vertStr);
+    modifyShaderVersion(fragStr);
+    assert(!vertStr.empty() && !fragStr.empty());
 
-    int width, height, nChannel;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load(imagePath.c_str(), &width, &height, &nChannel, 0);
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+    compileAndLinkShader(vertSource, fragSource);
+
+    for (auto&& tex : textures) {
+        tex.init();
     }
-    stbi_image_free(data);
+}
 
+Texture::Texture(const std::string &imagePath): texFile(imagePath) {
     Logger::message("new texture " + to_string(texture) + ", image " + imagePath);
 }
 
@@ -231,4 +220,22 @@ Texture::Texture(const Texture &tex) {
 
 GLuint Texture::getTexture() const {
     return texture;
+}
+
+void Texture::init() {
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    int width, height, nChannel;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char *data = stbi_load(texFile.c_str(), &width, &height, &nChannel, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    stbi_image_free(data);
 }

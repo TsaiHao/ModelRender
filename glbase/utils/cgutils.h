@@ -34,8 +34,6 @@ int glCheckError_(const char* file, int line);
 
 double getTime();
 
-WindowType glWindowInit();
-
 std::string readTextFile(const std::string &file);
 
 std::string stripString(const std::string& str);

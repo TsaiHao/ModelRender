@@ -39,6 +39,7 @@ public:
 
 private:
     void emplaceAnimator();
+    std::string vertFile, fragFile;
     std::unique_ptr<GLObject> glObject;
     std::shared_ptr<ObjLoader> obj;
     std::vector<float> vertices;        // store vertices' position/texture/normal data
