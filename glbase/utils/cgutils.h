@@ -69,6 +69,19 @@ void printVertices(const std::string &file, const std::vector<T> &vertices, cons
     }
 }
 
+template <typename VectorType1, typename VectorType2>
+bool isVectorEqual(const VectorType1& vec1, const VectorType2& vec2, std::size_t vecSize = 0, double eps = 1e-7) {
+    if (vecSize == 0) {
+        vecSize = vec1.size();
+    }
+    for (int i = 0; i < vecSize; ++i) {
+        if (std::abs(vec1[i] - vec2[i]) > eps) {
+            return false;
+        }
+    }
+    return true;
+}
+
 class Logger {
 public:
     static void error(const std::string &msg);

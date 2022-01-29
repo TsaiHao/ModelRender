@@ -11,5 +11,4 @@
 
 #include "utils/shader.h"
 
-#include "scene/camera.h"
 #include "scene/scene.h"

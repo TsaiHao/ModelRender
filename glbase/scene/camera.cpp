@@ -5,39 +5,58 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "cgmacros.h"
 
+class Camera::MathData {
+public:
+    Vec3 cameraPosition;
+    Vec3 cameraTarget;
+    Vec3 cameraUp;
+    glm::mat4 view;
+};
 //Camera::Camera() = default;
 
-Camera::Camera(const Camera::Vec3 &pos, const Camera::Vec3 &target, const Camera::Vec3 &up) {
+Camera::Camera(const Camera::Vec3 &pos, const Camera::Vec3 &target, const Camera::Vec3 &up):
+    data(std::make_unique<MathData>()) {
     setCameraVector(pos, target, up);
 }
 
-void Camera::attachShader(const std::shared_ptr<Shader> &sd, const std::string uf) {
-    this->shader = sd;
-    this->uniform = uf;
-    updateUniform();
-}
-
 void Camera::setCameraVector(const Camera::Vec3 &pos, const Camera::Vec3 &target, const Camera::Vec3 &up) {
-    cameraPosition = pos;
-    cameraTarget = target;
-    cameraUp = up;
+    data->cameraPosition = pos;
+    data->cameraTarget = target;
+    data->cameraUp = up;
 }
 
 void Camera::setPosition(const Camera::Vec3 &pos) {
-    cameraPosition = pos;
+    if (isVectorEqual(pos, data->cameraPosition)) {
+        return;
+    }
+    data->cameraPosition = pos;
+    updateViewMatrix();
 }
 
 void Camera::setTarget(const Camera::Vec3 &target) {
-    cameraTarget = target;
+    if (isVectorEqual(target, data->cameraTarget)) {
+        return;
+    }
+    data->cameraTarget = target;
+    updateViewMatrix();
 }
 
 void Camera::setUp(const Camera::Vec3 &up) {
-    cameraUp = up;
+    if (isVectorEqual(up, data->cameraUp)) {
+        return;
+    }
+    data->cameraUp = up;
+    updateViewMatrix();
 }
 
-void Camera::updateUniform() const {
-    auto camMat = glm::lookAt(glm::vec3(cameraPosition[0], cameraPosition[1], cameraPosition[2]),
-                              glm::vec3(cameraTarget[0], cameraTarget[1], cameraTarget[2]),
-                              glm::vec3(cameraUp[0], cameraUp[1], cameraUp[2]));
-    shader->setMat4(uniform, VPTR(camMat));
+void Camera::updateViewMatrix() const {
+     data->view = glm::lookAt(glm::vec3(data->cameraPosition[0], data->cameraPosition[1], data->cameraPosition[2]),
+                              glm::vec3(data->cameraTarget[0], data->cameraTarget[1], data->cameraTarget[2]),
+                              glm::vec3(data->cameraUp[0], data->cameraUp[1], data->cameraUp[2]));
 }
+
+float *Camera::getCameraViewMatrix() {
+    return VPTR(data->view);
+}
+
+Camera::~Camera() = default;

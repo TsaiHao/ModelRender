@@ -12,25 +12,19 @@ public:
 
     //Camera();
     Camera(const Vec3 &pos, const Vec3 &target, const Vec3 &up);
-    
-    void attachShader(const std::shared_ptr<Shader> &sd, const std::string uf = "camera");
-    
+    ~Camera();
+
     void setCameraVector(const Vec3 &pos, const Vec3 &target, const Vec3 &up);
 
     void setPosition(const Vec3 &pos);
     void setTarget(const Vec3 &target);
     void setUp(const Vec3 &up);
+    float* getCameraViewMatrix();
 
-    void updateUniform() const;
-    
+    class MathData;
 private:
-    std::shared_ptr<Shader> shader;
-
-    Vec3 cameraPosition;
-    Vec3 cameraTarget;
-    Vec3 cameraUp;
-
-    std::string uniform;
+    void updateViewMatrix() const;
+    std::unique_ptr<MathData> data;
 };
 
 

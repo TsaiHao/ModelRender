@@ -10,9 +10,8 @@
 using namespace std;
 
 ObjAnimator::ObjAnimator(std::shared_ptr<Shader> s, const std::string &mvpMatrixName) : mvpUniformName(mvpMatrixName),
-                                                                                        mvp(glm::mat4(1.0f)) {
-    shader = s;
-
+                                                                                        mvp(glm::mat4(1.0f)),
+                                                                                        shader(std::move(s)) {
     if (s->getProgram() < 0 || mvpMatrixName.empty()) {
         Logger::error("init animator failed, shader: %d, name: %s", s->getProgram(), mvpMatrixName.c_str());
     }

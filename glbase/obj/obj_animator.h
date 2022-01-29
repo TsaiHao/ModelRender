@@ -79,7 +79,7 @@ public:
 
     ObjAnimator() = default;
 
-    explicit ObjAnimator(std::shared_ptr<Shader> s, const std::string &mvpMatrixName = "mvp");
+    explicit ObjAnimator(std::shared_ptr<Shader> s, const std::string &mvpMatrixName = "model");
 
     void addDynamicActor(const ActorType &actor);
 
