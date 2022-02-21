@@ -88,10 +88,6 @@ void ObjRender::attachShader(const std::string &vsFile, const std::string &fsFil
     emplaceAnimator();
 }
 
-shared_ptr<Shader> ObjRender::getShader() const {
-    return shader;
-}
-
 void ObjRender::emplaceAnimator() {
     animator = ObjAnimator(shader);
 }
@@ -108,11 +104,25 @@ ObjRender &ObjRender::operator=(const ObjRender &rhs) {
     *glObject = *(rhs.glObject);
     obj = rhs.obj;
     vertices = rhs.vertices;
+    shader = rhs.shader;
+    animator = rhs.animator;
     return *this;
 }
 
 void ObjRender::addAnimationActor(const shared_ptr<AnimatorActor> &actor) {
     animator.addDynamicActor(actor);
+}
+
+void ObjRender::updateViewMatrix(const float* mat) const {
+    if (shader) {
+        shader->setViewMatrix(mat);
+    }
+}
+
+void ObjRender::updateProjectionMatrix(const float *mat) const {
+    if (shader) {
+        shader->setProjectionMatrix(mat);
+    }
 }
 
 ObjRender::~ObjRender() = default;

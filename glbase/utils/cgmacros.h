@@ -15,4 +15,9 @@
 
 #define ROTATE_STATIC_ANGLE "rotate_static_angle"
 
+// shader related
+#define MODEL_UNIFORM "model"
+#define VIEW_UNIFORM "view"
+#define PROJECTION_UNIFORM "projection"
+
 #endif //GRAPHICS_CGMACROS_H

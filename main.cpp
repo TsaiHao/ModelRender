@@ -3,9 +3,9 @@
 
 int main(int argc, char **argv)
 {
-    WindowType window = glWindowInit();
+    Scene scene;
 
-    ObjRender lightSource("resource/model/cube.obj", "resource/shader/plain.vert", "resource/shader/plain.frag");
+    ObjRender lightSource("resource/model/cube.obj", "resource/shader/mvp.vert", "resource/shader/plain.frag");
     lightSource.shader->attachTexture("texture1", Texture("resource/texture/wall.jpg"));
 
     auto trans = AnimatorActor::getActor(AnimationType::Translate, "trans");
@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     lightSource.animator.addDynamicActor(trans2);
     lightSource.animator.addDynamicActor(scale);
 
-    ObjRender cylinder("resource/model/cube.obj", "resource/shader/light.vert", "resource/shader/light.frag");
+    ObjRender cylinder("resource/model/cube.obj", "resource/shader/mvp.vert", "resource/shader/light.frag");
     auto names = cylinder.shader->getAllUniformList();
     for (auto&& name : names) {
         std::cout << "name: " << name << std::endl;
@@ -34,19 +34,12 @@ int main(int argc, char **argv)
     cyScale->setOrigin({0.3f, 0.3f, 0.3f});
     cylinder.addAnimationActor(cyScale);
 
-    while (!glfwWindowShouldClose(window))
+    scene.addModel(cylinder);
+    scene.addModel(lightSource);
+    while (true)
     {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.1f, 0.2f, 0.4f, 1.0f);
-
-        lightSource.draw();
-        cylinder.draw();
-    
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        scene.renderAFrame();
     }
-
-    glfwDestroyWindow(window);
 
     glfwTerminate();
     exit(EXIT_SUCCESS);

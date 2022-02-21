@@ -29,11 +29,11 @@ public:
     // origin is direction for translate, pivot for rotate
     virtual void setOrigin(const Vec3 &);
 
-    virtual void setSpeed(const float s);
+    virtual void setSpeed(float s);
 
     virtual void setExtra(const std::string &configKey, const std::any &value);
 
-    virtual void setPeriod(const float p);
+    virtual void setPeriod(float p);
     //virtual void setExternal(const std::string& key, const std::any& value) {}
 
     virtual void onProcess(Mat4 &mvp);
@@ -79,7 +79,11 @@ public:
 
     ObjAnimator() = default;
 
-    explicit ObjAnimator(std::shared_ptr<Shader> s, const std::string &mvpMatrixName = "model");
+    ObjAnimator& operator=(const ObjAnimator& rhs);
+
+    ObjAnimator(const ObjAnimator& rhs);
+
+    explicit ObjAnimator(std::shared_ptr<Shader> s);
 
     void addDynamicActor(const ActorType &actor);
 
@@ -87,7 +91,5 @@ public:
 
 private:
     std::shared_ptr<Shader> shader;
-    std::string mvpUniformName;
     std::vector<ActorType> dynamicActors;       // set every loop
-    glm::mat4 mvp;
 };

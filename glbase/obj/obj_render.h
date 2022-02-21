@@ -22,7 +22,8 @@ public:
     void draw();
 
     void attachShader(const std::string& vsFile, const std::string& fsFile);
-    std::shared_ptr<Shader> getShader() const;
+    void updateViewMatrix(const float* mat) const;
+    void updateProjectionMatrix(const float* mat) const;
 
     void addAnimationActor(const std::shared_ptr<AnimatorActor> &actor);
     Vec3 getCurrentPosition();

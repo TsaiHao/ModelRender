@@ -33,15 +33,16 @@ public:
     void setFloatVec4(const std::string &name, const float* value) const;
     void setMat4(const std::string &name, const float* value) const;
 
-    void attachTexture(const std::string& texName, const Texture& tex);
+    void setModelMatrix(const float* mat) const;
+    void setViewMatrix(const float* mat) const;
+    void setProjectionMatrix(const float* mat) const;
 
-    GLuint getProgram() const;
+    void attachTexture(const std::string& texName, const Texture& tex);
 
 #pragma mark for debug use
     std::vector<std::string> getAllUniformList() const;
 
 private:
-    static void checkCompileErrors(unsigned int shader, std::string type) ;
     GLint getUniformLocation(const std::string &name) const;
     static void modifyShaderVersion(std::string &shader) ;
 

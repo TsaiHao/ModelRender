@@ -11,7 +11,6 @@ uniform mat4 view;
 uniform mat4 projection;
 
 void main() {
-    //gl_Position = mvp * camera * pos;
     gl_Position = model * view * projection * pos;
     vertPos = gl_Position;
     texCoord = tex;

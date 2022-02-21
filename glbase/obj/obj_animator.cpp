@@ -9,12 +9,7 @@
 
 using namespace std;
 
-ObjAnimator::ObjAnimator(std::shared_ptr<Shader> s, const std::string &mvpMatrixName) : mvpUniformName(mvpMatrixName),
-                                                                                        mvp(glm::mat4(1.0f)),
-                                                                                        shader(std::move(s)) {
-    if (s->getProgram() < 0 || mvpMatrixName.empty()) {
-        Logger::error("init animator failed, shader: %d, name: %s", s->getProgram(), mvpMatrixName.c_str());
-    }
+ObjAnimator::ObjAnimator(std::shared_ptr<Shader> s): shader(std::move(s)) {
 }
 
 void ObjAnimator::addDynamicActor(const ActorType &actor) {
@@ -22,15 +17,28 @@ void ObjAnimator::addDynamicActor(const ActorType &actor) {
 }
 
 void ObjAnimator::doProcess() {
-    mvp = glm::mat4(1.0f);
+    auto mvp = glm::mat4(1.0f);
     auto time = getTime();
     for (auto &&actor: dynamicActors) {
         actor->onNotifyTime(time);
         actor->onProcess(mvp);
     }
 
-    shader->setMat4(mvpUniformName, VPTR(mvp));
+    shader->setModelMatrix(VPTR(mvp));
     _glCheckError();
+}
+
+ObjAnimator &ObjAnimator::operator=(const ObjAnimator &rhs) {
+    if (&rhs == this) {
+        return *this;
+    }
+    shader = rhs.shader;
+    dynamicActors = rhs.dynamicActors;
+    return *this;
+}
+
+ObjAnimator::ObjAnimator(const ObjAnimator &rhs) {
+    *this = rhs;
 }
 
 shared_ptr<AnimatorActor> AnimatorActor::getActor(const AnimationType t, const std::string &i) {

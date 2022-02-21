@@ -1,7 +1,7 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <sstream>
+#include <array>
 
 #include "shader.h"
 #include "cgutils.h"
@@ -10,14 +10,48 @@
 #include "glbase/thirdparty/stb/stb_image.h"
 
 #include "glm/glm.hpp"
-#include "glm/gtc/type_ptr.hpp"
-#include "glm/gtc/matrix_transform.hpp"
 
 using namespace std;
+
+static void addVertexShaderMacros(const Shader& shader, const string& source) {
+
+}
+
+static void addFragmentShaderMacros(const Shader& shader, const string& source) {
+
+}
+
+static void checkCompileErrors(unsigned int shader, const std::string& type) {
+    int success;
+    char infoLog[1024];
+    if (type != "PROGRAM") {
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
+            stringstream ss;
+            ss << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog
+               << "\n -- --------------------------------------------------- -- " << std::endl;
+            Logger::error(ss.str());
+            abort();
+        }
+    } else {
+        glGetProgramiv(shader, GL_LINK_STATUS, &success);
+        if (!success) {
+            stringstream ss;
+            glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
+            ss << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog
+               << "\n -- --------------------------------------------------- -- " << std::endl;
+            Logger::error(ss.str());
+            abort();
+        }
+    }
+}
 
 Shader::Shader(const string &vertFile, const string &fragFile) {
     string vertStr = readTextFile(vertFile);
     string fragStr = readTextFile(fragFile);
+    addVertexShaderMacros(*this, vertStr);
+    addFragmentShaderMacros(*this, fragStr);
     modifyShaderVersion(vertStr);
     modifyShaderVersion(fragStr);
     assert(!vertStr.empty() && !fragStr.empty());
@@ -69,32 +103,6 @@ void Shader::attachTexture(const std::string &texName, const Texture &tex) {
     Logger::message("shader " + to_string(program) + " attach tex " + to_string(tex.getTexture()));
 }
 
-void Shader::checkCompileErrors(unsigned int shader, std::string type) {
-    int success;
-    char infoLog[1024];
-    if (type != "PROGRAM") {
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-        if (!success) {
-            glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            stringstream ss;
-            ss << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog
-                      << "\n -- --------------------------------------------------- -- " << std::endl;
-            Logger::error(ss.str());
-            abort();
-        }
-    } else {
-        glGetProgramiv(shader, GL_LINK_STATUS, &success);
-        if (!success) {
-            stringstream ss;
-            glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-            ss << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog
-                      << "\n -- --------------------------------------------------- -- " << std::endl;
-            Logger::error(ss.str());
-            abort();
-        }
-    }
-}
-
 GLint Shader::getUniformLocation(const std::string &name) const {
     GLint loc = glGetUniformLocation(program, name.c_str());
     if (loc < 0) {
@@ -111,16 +119,12 @@ Shader::Shader(const Shader &shd) {
     textures = shd.textures;
 }
 
-GLuint Shader::getProgram() const {
-    return program;
-}
-
 void Shader::setMat4(const string &name, const float *value) const {
     use();
     glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, value);
 }
 
-void Shader::setFloatVec4(const string &name, const float *value) const {
+void Shader::setFloatVec4(const string &name, const float * const value) const {
     use();
     glUniform4fv(getUniformLocation(name), 1, value);
 }
@@ -166,6 +170,18 @@ std::vector<std::string> Shader::getAllUniformList() const {
     }
 
     return names;
+}
+
+void Shader::setModelMatrix(const float *const mat) const {
+    setMat4(MODEL_UNIFORM, mat);
+}
+
+void Shader::setViewMatrix(const float *mat) const {
+    setMat4(VIEW_UNIFORM, mat);
+}
+
+void Shader::setProjectionMatrix(const float *mat) const {
+    setMat4(PROJECTION_UNIFORM, mat);
 }
 
 Texture::Texture(const std::string &imagePath) {
