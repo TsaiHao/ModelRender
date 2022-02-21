@@ -20,9 +20,9 @@ Camera::Camera(const Camera::Vec3 &pos, const Camera::Vec3 &target, const Camera
 }
 
 void Camera::setCameraVector(const Camera::Vec3 &pos, const Camera::Vec3 &target, const Camera::Vec3 &up) {
-    data->cameraPosition = pos;
-    data->cameraTarget = target;
-    data->cameraUp = up;
+    setPosition(pos);
+    setTarget(target);
+    setUp(up);
 }
 
 void Camera::setPosition(const Camera::Vec3 &pos) {

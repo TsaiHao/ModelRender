@@ -3,8 +3,6 @@ in vec3 vertNorm;
 
 out vec4 glColor;
 
-uniform sampler2D texture1;
-
 void main() {
-    glColor = texture(texture1, texCoord.xy);
+    glColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }

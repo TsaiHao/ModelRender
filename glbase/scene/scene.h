@@ -17,6 +17,8 @@ public:
     void addModel(const ObjRender& model);
     void renderAFrame();
 
+    void draw();
+
     void setCameraMatrix(const std::array<float, 3>& position,
                          const std::array<float, 3>& target,
                          const std::array<float, 3>& up) const;

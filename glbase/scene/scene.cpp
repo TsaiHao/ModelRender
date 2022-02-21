@@ -19,7 +19,7 @@ void Scene::setCameraMatrix(const std::array<float, 3> &position, const std::arr
 }
 
 Scene::Scene(): cam(std::make_unique<Camera>(
-        Camera::Vec3({0.f, 0.f, 3.f}),
+        Camera::Vec3({3.f, 0.f, 3.f}),
         Camera::Vec3({0.f, 0.f, 0.f}),
         Camera::Vec3({0.f, 1.f, 0.f}))),
                 nativeWindow(nullptr) {
@@ -84,11 +84,11 @@ void Scene::renderAFrame() {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
 
-    //auto const *view = cam->getCameraViewMatrix();
-    auto const* view = glm::value_ptr(glm::mat4(1.0f));
+    auto const *view = cam->getCameraViewMatrix();
+    auto const* projection = glm::value_ptr(glm::mat4(1.0f));
     for (auto&& model : models) {
         model->updateViewMatrix(view);
-        model->updateProjectionMatrix(view);
+        model->updateProjectionMatrix(projection);
         model->draw();
     }
 
@@ -105,4 +105,17 @@ void Scene::addModel(const ObjRender& model) {
     models.emplace_back(modelCopy);
 }
 
-Scene::~Scene() = default;
+void Scene::draw() {
+    while (!glfwWindowShouldClose(nativeWindow->window)) {
+        renderAFrame();
+    }
+    auto* buffer = new unsigned char[GL_WINDOW_HEIGHT * GL_WINDOW_WIDTH * 3];
+    glReadPixels(0, 0, GL_WINDOW_WIDTH, GL_WINDOW_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, buffer);
+    fstream fs("./screen.bmp", ios::binary | ios::out);
+    fs.write(reinterpret_cast<char*>(buffer), GL_WINDOW_WIDTH * GL_WINDOW_HEIGHT * 3);
+    fs.close();
+}
+
+Scene::~Scene() {
+    glfwTerminate();
+}
