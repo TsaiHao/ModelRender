@@ -25,7 +25,6 @@ void ObjAnimator::doProcess() {
     }
 
     shader->setModelMatrix(VPTR(mvp));
-    _glCheckError();
 }
 
 ObjAnimator &ObjAnimator::operator=(const ObjAnimator &rhs) {

@@ -12,9 +12,9 @@ int main(int argc, char **argv)
     scale->setOrigin({ 0.1f, 0.1f, 0.1f });
     auto rotate = AnimatorActor::getActor(AnimationType::Rotate, "rotate");
     rotate->setOrigin({0.5f, 0.7f, 0.9f});
-    rotate->setSpeed(0.9f);
+    rotate->setSpeed(0.8f);
     auto trans2 = AnimatorActor::getActor(AnimationType::Translate, "trans2");
-    trans2->setOrigin({0.5f, 0, 0});
+    trans2->setOrigin({0.9f, 0, 0});
     lightSource.animator.addDynamicActor(trans);
     lightSource.animator.addDynamicActor(rotate);
     lightSource.animator.addDynamicActor(trans2);

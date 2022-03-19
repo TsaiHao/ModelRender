@@ -5,10 +5,12 @@
 #include <memory>
 #include <array>
 
+#include "glm/glm.hpp"
+
 class Shader;
 class Camera {
 public:
-    using Vec3 = std::array<float, 3>;
+    using Vec3 = glm::vec3;
 
     //Camera();
     Camera(const Vec3 &pos, const Vec3 &target, const Vec3 &up);
@@ -19,12 +21,14 @@ public:
     void setPosition(const Vec3 &pos);
     void setTarget(const Vec3 &target);
     void setUp(const Vec3 &up);
-    float* getCameraViewMatrix();
+    const glm::mat4& getCameraViewMatrix() const;
 
-    class MathData;
 private:
-    void updateViewMatrix() const;
-    std::unique_ptr<MathData> data;
+    void updateViewMatrix();
+    Vec3 cameraPosition;
+    Vec3 cameraTarget;
+    Vec3 cameraUp;
+    glm::mat4 view;
 };
 
 

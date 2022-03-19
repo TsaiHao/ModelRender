@@ -15,7 +15,9 @@ public:
 
 void Scene::setCameraMatrix(const std::array<float, 3> &position, const std::array<float, 3> &target,
                             const std::array<float, 3> &up) const {
-    cam->setCameraVector(position, target, up);
+    cam->setCameraVector(Camera::Vec3(position[0], position[1], position[2]),
+                         Camera::Vec3(target[0], target[1], target[2]),
+                         Camera::Vec3(up[0], up[1], up[2]));
 }
 
 Scene::Scene(): cam(std::make_unique<Camera>(
@@ -81,14 +83,18 @@ void Scene::init() {
 }
 
 void Scene::renderAFrame() {
+    static glm::mat4 projection = glm::perspective(glm::radians(45.0f),
+                                                   float(GL_WINDOW_WIDTH) / float(GL_WINDOW_HEIGHT),
+                                                   0.1f, 100.0f);
+
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
 
-    auto const *view = cam->getCameraViewMatrix();
-    auto const* projection = glm::value_ptr(glm::mat4(1.0f));
+    auto const &view = cam->getCameraViewMatrix();
+
     for (auto&& model : models) {
-        model->updateViewMatrix(view);
-        model->updateProjectionMatrix(projection);
+        model->updateViewMatrix(VPTR(view));
+        model->updateProjectionMatrix(VPTR(projection));
         model->draw();
     }
 
@@ -114,6 +120,7 @@ void Scene::draw() {
     fstream fs("./screen.bmp", ios::binary | ios::out);
     fs.write(reinterpret_cast<char*>(buffer), GL_WINDOW_WIDTH * GL_WINDOW_HEIGHT * 3);
     fs.close();
+    delete[] buffer;
 }
 
 Scene::~Scene() {
