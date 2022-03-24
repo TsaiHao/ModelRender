@@ -40,6 +40,23 @@ ObjAnimator::ObjAnimator(const ObjAnimator &rhs) {
     *this = rhs;
 }
 
+Vec4 ObjAnimator::processSinglePoint(const Vec4 &point) {
+    auto mvp = Mat4(1.0f);
+    for (auto&& actor : dynamicActors) {
+        actor->onProcess(mvp);
+    }
+
+    return mvp * point;
+}
+
+Mat4 ObjAnimator::getModelMatrix() {
+   Mat4 model = glm::mat4(1.0f);
+   for (auto&& actor: dynamicActors) {
+       actor->onProcess(model);
+   }
+   return model;
+}
+
 shared_ptr<AnimatorActor> AnimatorActor::getActor(const AnimationType t, const std::string &i) {
     shared_ptr<AnimatorActor> actor = nullptr;
     switch (t) {

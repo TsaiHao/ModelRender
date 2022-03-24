@@ -3,6 +3,7 @@
 #include "cgutils.h"
 #include "obj_render.h"
 #include "glm/gtc/type_ptr.hpp"
+#include "shader.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ void Scene::setCameraMatrix(const std::array<float, 3> &position, const std::arr
 }
 
 Scene::Scene(): cam(std::make_unique<Camera>(
-        Camera::Vec3({3.f, 0.f, 3.f}),
+        Camera::Vec3({3.f, 3.f, 3.f}),
         Camera::Vec3({0.f, 0.f, 0.f}),
         Camera::Vec3({0.f, 1.f, 0.f}))),
                 nativeWindow(nullptr) {
@@ -62,6 +63,7 @@ void Scene::init() {
     nativeWindow->windowHeight = GL_WINDOW_HEIGHT;
     nativeWindow->windowWidth = GL_WINDOW_WIDTH;
     if (!nativeWindow->window) {
+        Logger::error("create window failed");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -92,11 +94,23 @@ void Scene::renderAFrame() {
 
     auto const &view = cam->getCameraViewMatrix();
 
+    static int i = 1;
     for (auto&& model : models) {
         model->updateViewMatrix(VPTR(view));
         model->updateProjectionMatrix(VPTR(projection));
+        auto lightPos =  lightSource->getCurrentPosition();
+        model->shader->setFloatVec4("lightPos", VPTR(lightPos));
         model->draw();
+        if (++i % 100 == 0) {
+            model->debugLighting(lightPos[0], lightPos[1], lightPos[2], lightPos[3]);
+        }
+
+        lightSource->shader->setFloatVec4("lightPos", VPTR(lightPos));
     }
+
+    lightSource->updateViewMatrix(VPTR(view));
+    lightSource->updateProjectionMatrix(VPTR(projection));
+    lightSource->draw();
 
     glfwSwapBuffers(nativeWindow->window);
     glfwPollEvents();
@@ -115,14 +129,20 @@ void Scene::draw() {
     while (!glfwWindowShouldClose(nativeWindow->window)) {
         renderAFrame();
     }
-    auto* buffer = new unsigned char[GL_WINDOW_HEIGHT * GL_WINDOW_WIDTH * 3];
-    glReadPixels(0, 0, GL_WINDOW_WIDTH, GL_WINDOW_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, buffer);
+
+    // for debug use
+    auto* buffer = new unsigned char[GL_WINDOW_HEIGHT * GL_WINDOW_WIDTH * 4];
+    glReadPixels(0, 0, GL_WINDOW_WIDTH, GL_WINDOW_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
     fstream fs("./screen.bmp", ios::binary | ios::out);
-    fs.write(reinterpret_cast<char*>(buffer), GL_WINDOW_WIDTH * GL_WINDOW_HEIGHT * 3);
+    fs.write(reinterpret_cast<char*>(buffer), GL_WINDOW_WIDTH * GL_WINDOW_HEIGHT * 4);
     fs.close();
     delete[] buffer;
 }
 
 Scene::~Scene() {
     glfwTerminate();
+}
+
+void Scene::addLightSource(const shared_ptr<ObjRender> &lightModel) {
+    lightSource = lightModel;
 }

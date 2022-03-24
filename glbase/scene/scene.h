@@ -23,9 +23,12 @@ public:
                          const std::array<float, 3>& target,
                          const std::array<float, 3>& up) const;
 
+    void addLightSource(const std::shared_ptr<ObjRender>& lightModel);
+
     class GLNativeWindow;
 private:
     std::vector<std::shared_ptr<ObjRender>> models;
+    std::shared_ptr<ObjRender> lightSource;
     std::unique_ptr<Camera> cam;
     std::unique_ptr<GLNativeWindow> nativeWindow;
 };

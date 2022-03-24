@@ -127,6 +127,7 @@ void Shader::setMat4(const string &name, const float *value) const {
 void Shader::setFloatVec4(const string &name, const float * const value) const {
     use();
     glUniform4fv(getUniformLocation(name), 1, value);
+    _glCheckError();
 }
 
 void Shader::setInt(const string &name, int value) const {

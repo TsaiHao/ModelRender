@@ -24,11 +24,15 @@ public:
     void attachShader(const std::string& vsFile, const std::string& fsFile);
     void updateViewMatrix(const float* mat) const;
     void updateProjectionMatrix(const float* mat) const;
+    void updateUniformMat4(const std::string& name, const float* mat);
+    void updateUniformVec4(const std::string& name, const float* vec);
 
     void addAnimationActor(const std::shared_ptr<AnimatorActor> &actor);
-    Vec3 getCurrentPosition();
+    Vec4 getCurrentPosition();
     Vec3 getCurrentRotation();
     Vec3 getCurrentScale();
+
+    void debugLighting(float x, float y, float z, float w);
 
 public:
     std::shared_ptr<Shader> shader;

@@ -12,6 +12,7 @@
 class Shader;
 
 using Vec3 = glm::vec3;
+using Vec4 = glm::vec4;
 using Mat4 = glm::mat4;
 
 enum class AnimationType {
@@ -88,6 +89,10 @@ public:
     void addDynamicActor(const ActorType &actor);
 
     void doProcess();
+
+    Vec4 processSinglePoint(const Vec4& point);
+
+    Mat4 getModelMatrix();
 
 private:
     std::shared_ptr<Shader> shader;

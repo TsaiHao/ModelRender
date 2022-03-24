@@ -125,4 +125,26 @@ void ObjRender::updateProjectionMatrix(const float *mat) const {
     }
 }
 
+Vec4 ObjRender::getCurrentPosition() {
+    Vec4 origin = Vec4(0, 0, 0, 1.0f);
+    auto trans = animator.processSinglePoint(origin);
+    return trans;
+}
+
+void ObjRender::debugLighting(float x, float y, float z, float w) {
+    glm::vec4 lightPos = glm::vec4(x, y, z, w);
+    glm::mat4 model = animator.getModelMatrix();
+
+    int nVertices = vertices.size() /  10;
+    for (int i = 0; i < nVertices; ++i) {
+        glm::vec4 aPos = glm::vec4(vertices[i * 10], vertices[i * 10 + 1], vertices[i * 10 + 2], vertices[i * 10 + 3]);
+        glm::vec4 fragPos = model * aPos;
+        glm::vec3 normal = glm::normalize(glm::vec3(vertices[i * 10 + 7], vertices[i * 10 + 8], vertices[i * 10 + 9]));
+        glm::vec3 lightDir = glm::normalize(lightPos - fragPos);
+        float dot = glm::dot(normal, lightDir);
+        cout << dot << '\t';
+    }
+    cout << endl;
+}
+
 ObjRender::~ObjRender() = default;
