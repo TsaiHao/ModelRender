@@ -38,4 +38,8 @@ const glm::mat4& Camera::getCameraViewMatrix() const {
     return view;
 }
 
+glm::vec4 Camera::getCameraPosition() const {
+    return glm::vec4(cameraPosition, 1.0f);
+}
+
 Camera::~Camera() = default;

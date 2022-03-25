@@ -1,6 +1,8 @@
 # Model Render
 
-Little toy project. 
+Little toy project.
+
+Based on [learn opengl](https://learnopengl.com/). 
 
 ## Features
 

@@ -99,6 +99,8 @@ void Scene::renderAFrame() {
         model->updateProjectionMatrix(VPTR(projection));
         auto lightPos =  lightSource->getCurrentPosition();
         model->shader->setFloatVec4("lightPos", VPTR(lightPos));
+        model->shader->setFloatVec4("cameraPos", VPTR(cam->getCameraPosition()));
+        
         model->draw();
     }
 

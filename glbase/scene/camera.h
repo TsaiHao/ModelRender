@@ -22,6 +22,7 @@ public:
     void setTarget(const Vec3 &target);
     void setUp(const Vec3 &up);
     const glm::mat4& getCameraViewMatrix() const;
+    glm::vec4 getCameraPosition() const;
 
 private:
     void updateViewMatrix();
