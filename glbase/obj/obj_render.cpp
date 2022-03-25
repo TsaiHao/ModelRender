@@ -60,9 +60,9 @@ void ObjRender::bufferData() {
     int stride = 4 + 3 + 3;
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void *) 4);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void *) (4 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void *) (4 + 3));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void *) ((4 + 3) * sizeof(float)));
     glEnableVertexAttribArray(2);
     _glCheckError();
 

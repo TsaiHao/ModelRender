@@ -11,10 +11,10 @@ int main(int argc, char **argv)
     auto scale = AnimatorActor::getActor(AnimationType::Scale, "scale");
     scale->setOrigin({ 0.1f, 0.1f, 0.1f });
     auto rotate = AnimatorActor::getActor(AnimationType::Rotate, "rotate");
-    rotate->setOrigin({0.0f, 0.8f, 0.0f});
+    rotate->setOrigin({0.4f, 0.8f, 0.3f});
     rotate->setSpeed(0.8f);
     auto trans2 = AnimatorActor::getActor(AnimationType::Translate, "trans2");
-    trans2->setOrigin({0.9f, 0, 0});
+    trans2->setOrigin({1.0f, 0, 0});
     //lightSource->animator.addDynamicActor(trans);
     lightSource->animator.addDynamicActor(rotate);
     lightSource->animator.addDynamicActor(trans2);

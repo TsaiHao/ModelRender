@@ -94,18 +94,12 @@ void Scene::renderAFrame() {
 
     auto const &view = cam->getCameraViewMatrix();
 
-    static int i = 1;
     for (auto&& model : models) {
         model->updateViewMatrix(VPTR(view));
         model->updateProjectionMatrix(VPTR(projection));
         auto lightPos =  lightSource->getCurrentPosition();
         model->shader->setFloatVec4("lightPos", VPTR(lightPos));
         model->draw();
-        if (++i % 100 == 0) {
-            model->debugLighting(lightPos[0], lightPos[1], lightPos[2], lightPos[3]);
-        }
-
-        lightSource->shader->setFloatVec4("lightPos", VPTR(lightPos));
     }
 
     lightSource->updateViewMatrix(VPTR(view));
