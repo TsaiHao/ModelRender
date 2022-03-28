@@ -82,6 +82,16 @@ bool isVectorEqual(const VectorType1& vec1, const VectorType2& vec2, std::size_t
     return true;
 }
 
+template <typename VecType>
+auto vec2array(VecType v) {
+    typedef typename VecType::value_type T;
+    std::array<T, VecType::size> arr;
+    for (int i = 0; i < arr.size(); ++i) {
+        arr[i] = v[i];
+    }
+    return arr;
+}
+
 class Logger {
 public:
     static void error(const std::string &msg);

@@ -1,4 +1,4 @@
-#include "obj_animator.h"
+#include "animator.h"
 
 #include <utility>
 #include "cgutils.h"
@@ -9,14 +9,14 @@
 
 using namespace std;
 
-ObjAnimator::ObjAnimator(std::shared_ptr<Shader> s): shader(std::move(s)) {
+Animator::Animator(std::shared_ptr<Shader> s): shader(std::move(s)) {
 }
 
-void ObjAnimator::addDynamicActor(const ActorType &actor) {
-    dynamicActors.push_back(actor);
+void Animator::addDynamicActor(std::shared_ptr<AnimatorActor> &actor) {
+    dynamicActors.push_back(std::move(actor));
 }
 
-void ObjAnimator::doProcess() {
+void Animator::doProcess() {
     auto mvp = glm::mat4(1.0f);
     auto time = getTime();
     for (auto &&actor: dynamicActors) {
@@ -27,7 +27,7 @@ void ObjAnimator::doProcess() {
     shader->setModelMatrix(VPTR(mvp));
 }
 
-ObjAnimator &ObjAnimator::operator=(const ObjAnimator &rhs) {
+Animator &Animator::operator=(const Animator &rhs) {
     if (&rhs == this) {
         return *this;
     }
@@ -36,11 +36,11 @@ ObjAnimator &ObjAnimator::operator=(const ObjAnimator &rhs) {
     return *this;
 }
 
-ObjAnimator::ObjAnimator(const ObjAnimator &rhs) {
+Animator::Animator(const Animator &rhs) {
     *this = rhs;
 }
 
-Vec4 ObjAnimator::processSinglePoint(const Vec4 &point) {
+Vec4 Animator::processSinglePoint(const Vec4 &point) {
     auto mvp = Mat4(1.0f);
     for (auto&& actor : dynamicActors) {
         actor->onProcess(mvp);
@@ -49,7 +49,7 @@ Vec4 ObjAnimator::processSinglePoint(const Vec4 &point) {
     return mvp * point;
 }
 
-Mat4 ObjAnimator::getModelMatrix() {
+Mat4 Animator::getModelMatrix() {
    Mat4 model = glm::mat4(1.0f);
    for (auto&& actor: dynamicActors) {
        actor->onProcess(model);

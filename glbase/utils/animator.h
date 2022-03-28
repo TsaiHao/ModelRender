@@ -8,6 +8,8 @@
 #include <memory>
 
 #include "../thirdparty/glm/glm/glm.hpp"
+#include "base_render.h"
+
 
 class Shader;
 
@@ -21,7 +23,7 @@ enum class AnimationType {
 
 class AnimatorActor {
 public:
-    static std::shared_ptr<AnimatorActor> getActor(AnimationType t, const std::string &i);
+    static std::shared_ptr<AnimatorActor> getActor(AnimationType t, const std::string &i = "");
 
     AnimatorActor(AnimationType t, std::string i);
 
@@ -74,19 +76,17 @@ private:
     float staticAngle = 0;
 };
 
-class ObjAnimator {
+class Animator {
 public:
-    using ActorType = std::shared_ptr<AnimatorActor>;
+    Animator() = default;
 
-    ObjAnimator() = default;
+    Animator& operator=(const Animator& rhs);
 
-    ObjAnimator& operator=(const ObjAnimator& rhs);
+    Animator(const Animator& rhs);
 
-    ObjAnimator(const ObjAnimator& rhs);
+    explicit Animator(std::shared_ptr<Shader> s);
 
-    explicit ObjAnimator(std::shared_ptr<Shader> s);
-
-    void addDynamicActor(const ActorType &actor);
+    void addDynamicActor(std::shared_ptr<AnimatorActor> &actor);
 
     void doProcess();
 
@@ -96,5 +96,5 @@ public:
 
 private:
     std::shared_ptr<Shader> shader;
-    std::vector<ActorType> dynamicActors;       // set every loop
+    std::vector<std::shared_ptr<AnimatorActor>> dynamicActors;
 };

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 #include <vector>
 #include <sstream>
 #include <array>
@@ -7,7 +8,7 @@
 #include "cgutils.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "glbase/thirdparty/stb/stb_image.h"
+#include "stb/stb_image.h"
 
 #include "glm/glm.hpp"
 
@@ -47,42 +48,17 @@ static void checkCompileErrors(unsigned int shader, const std::string& type) {
     }
 }
 
-Shader::Shader(const string &vertFile, const string &fragFile) {
-    string vertStr = readTextFile(vertFile);
-    string fragStr = readTextFile(fragFile);
-    addVertexShaderMacros(*this, vertStr);
-    addFragmentShaderMacros(*this, fragStr);
-    modifyShaderVersion(vertStr);
-    modifyShaderVersion(fragStr);
-    assert(!vertStr.empty() && !fragStr.empty());
-
-    vertShader = glCreateShader(GL_VERTEX_SHADER);
-    const char *vertChars = vertStr.c_str();
-    glShaderSource(vertShader, 1, &(vertChars), NULL);
-    glCompileShader(vertShader);
-    checkCompileErrors(vertShader, "VERTEX");
-
-    fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-    const char *fragChars = fragStr.c_str();
-    glShaderSource(fragShader, 1, &(fragChars), NULL);
-    glCompileShader(fragShader);
-    checkCompileErrors(fragShader, "FRAGMENT");
-
-    program = glCreateProgram();
-    glAttachShader(program, vertShader);
-    glAttachShader(program, fragShader);
-    glLinkProgram(program);
-    checkCompileErrors(program, "PROGRAM");
-    _glCheckError();
+Shader::Shader(string vertFile, string fragFile):
+    vertSourceFile(std::move(vertFile)), fragSourceFile(std::move(fragFile))
+{
+    init();
 }
 
 Shader::~Shader() {
-    //glDeleteProgram(program);
+    glDeleteProgram(program);
 }
 
 void Shader::use(const bool bindTextures) const {
-    _glCheckError();
-
     glUseProgram(program);
     if (bindTextures) {
         for (int i = 0; i < textures.size(); ++i) {
@@ -183,6 +159,44 @@ void Shader::setViewMatrix(const float *mat) const {
 
 void Shader::setProjectionMatrix(const float *mat) const {
     setMat4(PROJECTION_UNIFORM, mat);
+}
+
+void Shader::init() {
+    string vertStr = readTextFile(vertSourceFile);
+    string fragStr = readTextFile(fragSourceFile);
+    addVertexShaderMacros(*this, vertStr);
+    addFragmentShaderMacros(*this, fragStr);
+    modifyShaderVersion(vertStr);
+    modifyShaderVersion(fragStr);
+    assert(!vertStr.empty() && !fragStr.empty());
+
+    vertShader = glCreateShader(GL_VERTEX_SHADER);
+    const char *vertChars = vertStr.c_str();
+    glShaderSource(vertShader, 1, &(vertChars), NULL);
+    glCompileShader(vertShader);
+    checkCompileErrors(vertShader, "VERTEX");
+
+    fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+    const char *fragChars = fragStr.c_str();
+    glShaderSource(fragShader, 1, &(fragChars), NULL);
+    glCompileShader(fragShader);
+    checkCompileErrors(fragShader, "FRAGMENT");
+
+    program = glCreateProgram();
+    glAttachShader(program, vertShader);
+    glAttachShader(program, fragShader);
+    glLinkProgram(program);
+    checkCompileErrors(program, "PROGRAM");
+    _glCheckError();
+
+    glDeleteShader(vertShader);
+    glDeleteShader(fragShader);
+}
+
+void Shader::updateShaders(const std::string& vf, const std::string& ff) {
+    vertSourceFile = vf;
+    fragSourceFile = ff;
+    init();
 }
 
 Texture::Texture(const std::string &imagePath) {

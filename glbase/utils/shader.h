@@ -23,9 +23,11 @@ private:
 class Shader {
 public:
     Shader() = default;
-    Shader(const std::string &vertFile, const std::string &fragFile);
+    Shader(std::string vertFile, std::string fragFile);
     Shader(const Shader& shd);
     ~Shader();
+
+    void updateShaders(const std::string& vf, const std::string& ff);
 
     void use(bool bindTextures = true) const;
 
@@ -46,9 +48,14 @@ private:
     GLint getUniformLocation(const std::string &name) const;
     static void modifyShaderVersion(std::string &shader) ;
 
+    void init();
+
     GLuint vertShader;
     GLuint fragShader;
     GLuint program;
+
+    std::string vertSourceFile;
+    std::string fragSourceFile;
 
     std::vector<Texture> textures;
 };

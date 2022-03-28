@@ -4,6 +4,8 @@
 #include "obj_render.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "shader.h"
+#include "render_helper.h"
+#include "base_render.h"
 
 using namespace std;
 
@@ -93,11 +95,12 @@ void Scene::renderAFrame() {
     glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
 
     auto const &view = cam->getCameraViewMatrix();
+    auto lightPos = RenderHelper::getModelSpacePosition(*lightSource);
 
     for (auto&& model : models) {
         model->updateViewMatrix(VPTR(view));
         model->updateProjectionMatrix(VPTR(projection));
-        auto lightPos =  lightSource->getCurrentPosition();
+
         model->shader->setFloatVec4("lightPos", VPTR(lightPos));
         model->shader->setFloatVec4("cameraPos", VPTR(cam->getCameraPosition()));
         
@@ -112,13 +115,9 @@ void Scene::renderAFrame() {
     glfwPollEvents();
 }
 
-void Scene::addModel(std::shared_ptr<ObjRender> model) {
+void Scene::addModel(std::shared_ptr<BaseRender> model) {
+    model->initRender();
     models.emplace_back(std::move(model));
-}
-
-void Scene::addModel(const ObjRender& model) {
-    auto modelCopy = std::make_shared<ObjRender>(model);
-    models.emplace_back(modelCopy);
 }
 
 void Scene::draw() {
@@ -139,6 +138,7 @@ Scene::~Scene() {
     glfwTerminate();
 }
 
-void Scene::addLightSource(const shared_ptr<ObjRender> &lightModel) {
+void Scene::addLightSource(const shared_ptr<BaseRender> &lightModel) {
     lightSource = lightModel;
+    lightSource->initRender();
 }

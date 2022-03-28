@@ -9,25 +9,30 @@ if (Android)
     option(MOBILE_PLATFORM on)
 endif()
 
-set(OBJ_SOURCE_FILES
-        obj/obj_render.cpp
-        obj/obj_loader.cpp
-        obj/obj_animator.cpp)
+set(RENDERER_SOURCE_FILES
+        renderer/base_render.cpp
+        renderer/obj_render.cpp
+        renderer/render_helper.cpp)
 
 set(UTIL_SOURCE_FILES
         utils/cgutils.cpp
-        utils/shader.cpp)
+        utils/shader.cpp
+        utils/animator.cpp)
 
 set(SCENE_SOURCE_FILES
         scene/camera.cpp
         scene/scene.cpp)
 
+set(MESH_LOADER_FILES
+        utils/mesh_loader/obj_loader.cpp)
+
 list(APPEND GL_INCLUDE_DIR
         thirdparty/glm
-        obj
+        thirdparty
+        renderer
         utils
         scene
-        ${CMAKE_SOURCE_DIR})
+        utils/mesh_loader)
 
 if (MOBILE_PLATFORM)
     set(GLAD_SOURCE_FILES )
@@ -39,9 +44,10 @@ endif()
 
 add_library(${LIB_NAME} SHARED
         ${UTIL_SOURCE_FILES}
-        ${OBJ_SOURCE_FILES}
+        ${RENDERER_SOURCE_FILES}
         ${GLAD_SOURCE_FILES}
-        ${SCENE_SOURCE_FILES})
+        ${SCENE_SOURCE_FILES}
+        ${MESH_LOADER_FILES})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Android")
     find_library(log-lib log)

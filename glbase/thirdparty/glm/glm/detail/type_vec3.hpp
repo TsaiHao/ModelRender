@@ -18,6 +18,7 @@ namespace glm
 	{
 		// -- Implementation detail --
 
+        enum {size = 3};
 		typedef T value_type;
 		typedef vec<3, T, Q> type;
 		typedef vec<3, bool, Q> bool_type;
