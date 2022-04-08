@@ -23,6 +23,8 @@ public:
 
     void attachShaders(const std::string& vsFile, const std::string& fsFile);
 
+    void attachTexture(const std::string& imagePath);
+
     /******
      * translate model
      * @param x translate direction x

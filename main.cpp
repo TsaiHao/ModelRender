@@ -13,6 +13,7 @@ int main(int argc, char **argv)
 
     auto cylinder= createModel("resource/model/polygon.obj");
     cylinder->attachShaders("resource/shader/mvp.vert", "resource/shader/light.frag");
+    cylinder->attachTexture("resource/texture/wall.jpg");
     cylinder->scale(0.4f, 0.4f, 0.4f);
 
     scene.addModel(cylinder);

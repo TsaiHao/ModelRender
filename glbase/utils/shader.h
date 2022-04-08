@@ -18,6 +18,7 @@ public:
 
 private:
     GLuint texture;
+    std::string imagePath;
 };
 
 class Shader {
@@ -32,6 +33,7 @@ public:
     void use(bool bindTextures = true) const;
 
     void setInt(const std::string &name, int value) const;
+    void setFloat(const std::string& name, float value) const;
     void setFloatVec4(const std::string &name, const float* value) const;
     void setMat4(const std::string &name, const float* value) const;
 

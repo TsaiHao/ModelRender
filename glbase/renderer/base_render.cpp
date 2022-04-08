@@ -41,6 +41,9 @@ void BaseRender::scale(float x, float y, float z) const {
     animator->addDynamicActor(scale);
 }
 
+void BaseRender::attachTexture(const std::string &imagePath) {
+    shader->attachTexture(TEXTURE_UNIFORM, Texture(imagePath));
+}
 
 std::shared_ptr<BaseRender> createModel(const std::string &modelFile) {
     if (modelFile.size() > 4 && modelFile.substr(modelFile.size() - 4, 4) == ".obj") {

@@ -8,6 +8,9 @@ in vec4 fragPos;
 uniform vec4 lightPos;
 uniform vec4 cameraPos;
 
+uniform sampler2D texture1;
+uniform float textureRatio;
+
 void main() {
     float ambientStrength = 0.2f;
     vec4 basicColor = vec4(1.0f, 0.5f, 0.1f, 1.0f);
@@ -24,4 +27,6 @@ void main() {
     vec3 specularColor = specular * 0.5 * basicColor.xyz;
 
     fragColor = vec4(ambientColor + diffuseColor + specularColor, 1.0f);
+
+    fragColor = mix(fragColor, texture(texture1, texCoord.xy), textureRatio);
 }

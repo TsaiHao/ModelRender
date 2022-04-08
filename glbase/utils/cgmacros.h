@@ -26,5 +26,7 @@ using WindowType = void*;
 #define MODEL_UNIFORM "model"
 #define VIEW_UNIFORM "view"
 #define PROJECTION_UNIFORM "projection"
+#define TEXTURE_UNIFORM "texture1"
+#define MIX_RATION_UNIFORM "textureRatio"
 
 #endif //GRAPHICS_CGMACROS_H

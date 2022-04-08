@@ -2,7 +2,6 @@
 #include <utility>
 #include <vector>
 #include <sstream>
-#include <array>
 
 #include "glad/glad.h"
 #include "shader.h"
@@ -77,6 +76,7 @@ void Shader::attachTexture(const std::string &texName, const Texture &tex) {
     use();
     setInt(texName, textures.size());
     textures.emplace_back(tex);
+    setFloat(MIX_RATION_UNIFORM, 0.5f);
     Logger::message("shader " + to_string(program) + " attach tex " + to_string(tex.getTexture()));
 }
 
@@ -192,6 +192,8 @@ void Shader::init() {
 
     glDeleteShader(vertShader);
     glDeleteShader(fragShader);
+
+    setFloat(MIX_RATION_UNIFORM, 0);
 }
 
 void Shader::updateShaders(const std::string& vf, const std::string& ff) {
@@ -200,7 +202,12 @@ void Shader::updateShaders(const std::string& vf, const std::string& ff) {
     init();
 }
 
-Texture::Texture(const std::string &imagePath) {
+void Shader::setFloat(const string &name, float value) const {
+    use();
+    glUniform1f(getUniformLocation(name), value);
+}
+
+Texture::Texture(const std::string &img): imagePath(img) {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -210,7 +217,7 @@ Texture::Texture(const std::string &imagePath) {
 
     int width, height, nChannel;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load(imagePath.c_str(), &width, &height, &nChannel, 0);
+    unsigned char *data = stbi_load(img.c_str(), &width, &height, &nChannel, 0);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -234,6 +241,7 @@ void Texture::bind(const int unit) const {
 
 Texture::Texture(const Texture &tex) {
     texture = tex.texture;
+    imagePath = tex.imagePath;
 }
 
 GLuint Texture::getTexture() const {
