@@ -9,6 +9,14 @@ Camera::Camera(const Camera::Vec3 &pos, const Camera::Vec3 &target, const Camera
     setCameraVector(pos, target, up);
 }
 
+
+Camera::Camera(const Camera& cam) {
+    cameraPosition = cam.cameraPosition;
+    cameraTarget = cam.cameraTarget;
+    cameraUp = cam.cameraUp;
+    updateViewMatrix();
+}
+
 void Camera::setCameraVector(const Camera::Vec3 &pos, const Camera::Vec3 &target, const Camera::Vec3 &up) {
     setPosition(pos);
     setTarget(target);
@@ -32,6 +40,9 @@ void Camera::setUp(const Camera::Vec3 &up) {
 
 void Camera::updateViewMatrix() {
      view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
+     if (isnan(view[0][0])) {
+         Logger::error("nan detected");
+     }
 }
 
 const glm::mat4& Camera::getCameraViewMatrix() const {

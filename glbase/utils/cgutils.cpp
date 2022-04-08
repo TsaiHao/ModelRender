@@ -1,7 +1,9 @@
-#include "cgutils.h"
-#ifdef __ANDROID__
+#ifndef __ANDROID__
+#include "glad/glad.h"
+#else
 #include <android/log.h>
 #endif
+#include "cgutils.h"
 
 using namespace std;
 

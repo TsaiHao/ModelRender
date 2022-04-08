@@ -1,9 +1,5 @@
 set(LIB_NAME glbase)
 
-if (GEN_EXE)
-    add_subdirectory(thirdparty/glfw)
-endif()
-
 option(MOBILE_PLATFORM off)
 if (Android)
     option(MOBILE_PLATFORM on)
@@ -33,6 +29,11 @@ list(APPEND GL_INCLUDE_DIR
         utils
         scene
         utils/mesh_loader)
+
+if (GEN_EXE)
+    add_subdirectory(thirdparty/glfw)
+    list(APPEND SCENE_SOURCE_FILES scene/user_interface.cpp)
+endif()
 
 if (MOBILE_PLATFORM)
     set(GLAD_SOURCE_FILES )

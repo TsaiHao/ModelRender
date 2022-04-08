@@ -4,6 +4,7 @@
 #include <sstream>
 #include <array>
 
+#include "glad/glad.h"
 #include "shader.h"
 #include "cgutils.h"
 

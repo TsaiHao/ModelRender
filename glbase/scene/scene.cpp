@@ -1,11 +1,12 @@
+#include "obj_render.h"
 #include "scene.h"
 #include "camera.h"
 #include "cgutils.h"
-#include "obj_render.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "shader.h"
 #include "render_helper.h"
 #include "base_render.h"
+#include "user_interface.h"
 
 using namespace std;
 
@@ -23,8 +24,8 @@ void Scene::setCameraMatrix(const std::array<float, 3> &position, const std::arr
                          Camera::Vec3(up[0], up[1], up[2]));
 }
 
-Scene::Scene(): cam(std::make_unique<Camera>(
-        Camera::Vec3({3.f, 3.f, 3.f}),
+Scene::Scene(): cam(std::make_shared<Camera>(
+        Camera::Vec3({3.f, 0.f, -3.f}),
         Camera::Vec3({0.f, 0.f, 0.f}),
         Camera::Vec3({0.f, 1.f, 0.f}))),
                 nativeWindow(nullptr) {
@@ -35,12 +36,6 @@ Scene::Scene(): cam(std::make_unique<Camera>(
 static void glfwErrorCallback(int error, const char* description)
 {
     Logger::error(description);
-}
-
-static void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 #endif
 
@@ -70,10 +65,12 @@ void Scene::init() {
         exit(EXIT_FAILURE);
     }
 
-    glfwSetKeyCallback(nativeWindow->window, glfwKeyCallback);
     glfwSetFramebufferSizeCallback(nativeWindow->window, [](GLFWwindow* window, int width, int height) {
         glViewport(0, 0, width, height);
     });
+
+    ui = make_unique<GLFWUserInterface>(cam, nativeWindow->window);
+    glfwSetWindowUserPointer(nativeWindow->window, (void*)ui.get());
 
     glfwMakeContextCurrent(nativeWindow->window);
 #endif

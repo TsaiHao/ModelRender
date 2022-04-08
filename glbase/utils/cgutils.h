@@ -10,7 +10,6 @@
 #include <cstdio>
 
 #ifndef __ANDROID__
-#include "../thirdparty/glad/include/glad/glad.h"
 #else
 #include "GLES3/gl3.h"
 #endif
@@ -18,9 +17,6 @@
 
 #ifdef USE_GLFW
 #include "GLFW/glfw3.h"
-using WindowType = GLFWwindow*;
-#else
-using WindowType = void*;
 #endif
 
 #ifndef _WIN32

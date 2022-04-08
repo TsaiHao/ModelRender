@@ -6,6 +6,7 @@
 
 class BaseRender;
 class Camera;
+class GLFWUserInterface;
 
 class Scene {
 public:
@@ -13,7 +14,9 @@ public:
     ~Scene();
 
     void init();
+
     void addModel(std::shared_ptr<BaseRender> model);
+
     void renderAFrame();
 
     void draw();
@@ -28,8 +31,9 @@ public:
 private:
     std::vector<std::shared_ptr<BaseRender>> models;
     std::shared_ptr<BaseRender> lightSource;
-    std::unique_ptr<Camera> cam;
+    std::shared_ptr<Camera> cam;
     std::unique_ptr<GLNativeWindow> nativeWindow;
+    std::unique_ptr<GLFWUserInterface> ui;
 };
 
 #endif //GRAPHICS_SCENE_H

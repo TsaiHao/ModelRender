@@ -1,8 +1,8 @@
+#include "obj_render.h"
 #include "base_render.h"
 #include "animator.h"
-#include "shader.h"
 
-#include "obj_render.h"
+#include "shader.h"
 
 void BaseRender::updateViewMatrix(const float *mat) const {
     shader->setViewMatrix(mat);

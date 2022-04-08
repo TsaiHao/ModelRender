@@ -4,6 +4,13 @@
 #define PERFORMANCE Performance __perf__macro(__FUNCTION__)
 #define _glCheckError() glCheckError_(__FILE__, __LINE__)
 
+#ifdef USE_GLFW
+class GLFWwindow;
+using WindowType = GLFWwindow*;
+#else
+using WindowType = void*;
+#endif
+
 #define GL_WINDOW_WIDTH (800)
 #define GL_WINDOW_HEIGHT (800)
 

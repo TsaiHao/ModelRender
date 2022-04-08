@@ -4,14 +4,14 @@ project(graphics)
 set(CMAKE_CXX_STANDARD 17)
 set(GL_LIBRARY glbase)
 
-option(GEN_EXE "generate executable" off)
+option(GEN_EXE "generate executable" on)
 
 add_subdirectory(glbase)
 include_directories(glbase)
 
 if (GEN_EXE)
 	add_compile_definitions(USE_GLFW)
-	add_executable(graphics main.cpp )
+	add_executable(graphics main.cpp)
 	add_executable(utest test/unit_test.cpp)
 
 	target_link_libraries(graphics ${CMAKE_DL_LIBS} glbase)
