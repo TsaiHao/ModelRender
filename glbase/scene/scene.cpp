@@ -15,6 +15,10 @@ public:
     WindowType window = nullptr;
     int windowWidth = 0;
     int windowHeight = 0;
+
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f),
+                                            float(GL_WINDOW_WIDTH) / float(GL_WINDOW_HEIGHT),
+                                        0.1f, 100.0f);;
 };
 
 void Scene::setCameraMatrix(const std::array<float, 3> &position, const std::array<float, 3> &target,
@@ -80,41 +84,50 @@ void Scene::init() {
 #endif
     glEnable(GL_DEPTH_TEST);
 
+    lightSource = static_pointer_cast<BaseRenderImpl>(createModel(GeometryType::Circle));
+    lightSource->setVisibility(false);
+
     Logger::message("scene %p inited successfully", (void*)this);
 }
 
+void Scene::renderAModel(const std::shared_ptr<BaseRenderImpl>& model, const float* lightPos) {
+    if (model == nullptr || !model->getVisibility()) {
+        return;
+    }
+
+    model->updateViewMatrix(VPTR(cam->getCameraViewMatrix()));
+    model->updateProjectionMatrix(VPTR(nativeWindow->projection));
+
+    model->shader->setFloatVec4(LIGHT_SOURCE_POSITION, lightPos);
+    model->shader->setFloatVec4(CAMERA_POSITION, VPTR(cam->getCameraPosition()));
+
+    model->draw();
+}
+
 void Scene::renderAFrame() {
-    static glm::mat4 projection = glm::perspective(glm::radians(45.0f),
-                                                   float(GL_WINDOW_WIDTH) / float(GL_WINDOW_HEIGHT),
-                                                   0.1f, 100.0f);
+
 
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
 
     auto const &view = cam->getCameraViewMatrix();
-    auto lightPos = RenderHelper::getModelSpacePosition(*lightSource);
-
-    for (auto&& model : models) {
-        model->updateViewMatrix(VPTR(view));
-        model->updateProjectionMatrix(VPTR(projection));
-
-        model->shader->setFloatVec4("lightPos", VPTR(lightPos));
-        model->shader->setFloatVec4("cameraPos", VPTR(cam->getCameraPosition()));
-        
-        model->draw();
+    glm::vec4 lightPos;
+    if (lightSource) {
+        lightPos = RenderHelper::getModelSpacePosition(*lightSource);
     }
 
-    lightSource->updateViewMatrix(VPTR(view));
-    lightSource->updateProjectionMatrix(VPTR(projection));
-    lightSource->draw();
+    for (auto&& model : models) {
+        renderAModel(model, VPTR(lightPos));
+    }
 
+    renderAModel(lightSource, VPTR(lightPos));
     glfwSwapBuffers(nativeWindow->window);
     glfwPollEvents();
 }
 
 void Scene::addModel(std::shared_ptr<BaseRender> model) {
     model->initRender();
-    models.emplace_back(std::move(model));
+    models.emplace_back(std::static_pointer_cast<BaseRenderImpl>(model));
 }
 
 void Scene::draw() {
@@ -136,6 +149,6 @@ Scene::~Scene() {
 }
 
 void Scene::addLightSource(const shared_ptr<BaseRender> &lightModel) {
-    lightSource = lightModel;
+    lightSource = static_pointer_cast<BaseRenderImpl>(lightModel);
     lightSource->initRender();
 }

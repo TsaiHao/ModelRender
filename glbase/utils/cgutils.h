@@ -13,7 +13,7 @@
 #else
 #include "GLES3/gl3.h"
 #endif
-#include "cgmacros.h"
+#include "cgdefs.h"
 
 #ifdef USE_GLFW
 #include "GLFW/glfw3.h"
@@ -24,7 +24,7 @@
 #include <sys/time.h>
 #endif
 
-#include "cgmacros.h"
+#include "cgdefs.h"
 
 int glCheckError_(const char* file, int line);
 

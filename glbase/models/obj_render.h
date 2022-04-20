@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-#include "base_render.h"
+#include "base_render_impl.h"
 #include "glad/glad.h"
 
 class Shader;
@@ -14,7 +14,7 @@ class ObjLoader;
 class Animator;
 class AnimatorActor;
 
-class ObjRender: public BaseRender {
+class ObjRender: public BaseRenderImpl {
 public:
     explicit ObjRender(std::string const& objFile);
 
@@ -28,10 +28,7 @@ public:
     void draw() override;
 
 private:
-    GLuint VAO;
-    GLuint VBO;
     std::shared_ptr<ObjLoader> obj;
-    std::vector<float> vertices;        // store vertices' position/texture/normal data
 };
 
 #endif //GRAPHICS_OBJ_RENDER_H

@@ -4,6 +4,7 @@ int main(int argc, char **argv)
 {
     Scene scene;
 
+    /*
     auto lightSource = createModel("resource/model/cube.obj");
 
     lightSource->rotate(0.4f, 0.8f, 0.3f, 0, 0.8f);
@@ -18,6 +19,10 @@ int main(int argc, char **argv)
 
     scene.addModel(cylinder);
     scene.addLightSource(lightSource);
+     */
+
+    auto triangle = createModel(GeometryType::Circle);
+    scene.addModel(triangle);
 
     scene.draw();
 

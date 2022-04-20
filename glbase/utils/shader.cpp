@@ -82,10 +82,6 @@ void Shader::attachTexture(const std::string &texName, const Texture &tex) {
 
 GLint Shader::getUniformLocation(const std::string &name) const {
     GLint loc = glGetUniformLocation(program, name.c_str());
-    if (loc < 0) {
-        cerr << "Error: get uniform location error: name: " << name << " loc: " << loc << endl;
-    }
-
     return loc;
 }
 

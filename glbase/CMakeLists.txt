@@ -6,9 +6,11 @@ if (Android)
 endif()
 
 set(RENDERER_SOURCE_FILES
-        renderer/base_render.cpp
-        renderer/obj_render.cpp
-        renderer/render_helper.cpp)
+        models/base_render.cpp
+        models/base_render_impl.cpp
+        models/geometry_render.cpp
+        models/obj_render.cpp
+        models/render_helper.cpp)
 
 set(UTIL_SOURCE_FILES
         utils/cgutils.cpp
@@ -25,10 +27,11 @@ set(MESH_LOADER_FILES
 list(APPEND GL_INCLUDE_DIR
         thirdparty/glm
         thirdparty
-        renderer
+        models
         utils
         scene
-        utils/mesh_loader)
+        utils/mesh_loader
+        ${CMAKE_SOURCE_DIR})
 
 if (GEN_EXE)
     add_subdirectory(thirdparty/glfw)

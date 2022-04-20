@@ -11,8 +11,8 @@ using WindowType = GLFWwindow*;
 using WindowType = void*;
 #endif
 
-#define GL_WINDOW_WIDTH (800)
-#define GL_WINDOW_HEIGHT (800)
+#define GL_WINDOW_WIDTH (300)
+#define GL_WINDOW_HEIGHT (300)
 
 #define VPTR(x) (glm::value_ptr(x))
 
@@ -28,5 +28,7 @@ using WindowType = void*;
 #define PROJECTION_UNIFORM "projection"
 #define TEXTURE_UNIFORM "texture1"
 #define MIX_RATION_UNIFORM "textureRatio"
+#define LIGHT_SOURCE_POSITION "lightPos"
+#define CAMERA_POSITION "cameraPos"
 
 #endif //GRAPHICS_CGMACROS_H

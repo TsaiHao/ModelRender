@@ -4,20 +4,19 @@
 #include <vector>
 #include <memory>
 
-class BaseRender;
+class BaseRenderImpl;
 class Camera;
 class GLFWUserInterface;
 
 class Scene {
 public:
     Scene();
+
     ~Scene();
 
     void init();
 
     void addModel(std::shared_ptr<BaseRender> model);
-
-    void renderAFrame();
 
     void draw();
 
@@ -28,10 +27,15 @@ public:
     void addLightSource(const std::shared_ptr<BaseRender>& lightModel);
 
     class GLNativeWindow;
+
 private:
-    std::vector<std::shared_ptr<BaseRender>> models;
-    std::shared_ptr<BaseRender> lightSource;
-    std::shared_ptr<Camera> cam;
+    void renderAFrame();
+
+    void renderAModel(const std::shared_ptr<BaseRenderImpl>& model, const float* lightPos);
+
+    std::vector<std::shared_ptr<BaseRenderImpl>> models {};
+    std::shared_ptr<BaseRenderImpl> lightSource = nullptr;
+    std::shared_ptr<Camera> cam = nullptr;
     std::unique_ptr<GLNativeWindow> nativeWindow;
     std::unique_ptr<GLFWUserInterface> ui;
 };

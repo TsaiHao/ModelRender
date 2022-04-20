@@ -5,6 +5,13 @@
 #include <memory>
 #include <vector>
 
+enum class GeometryType {
+    Triangle,
+    Rectangle,
+    Circle,
+    Custom
+};
+
 class AnimatorActor;
 class Animator;
 class Shader;
@@ -17,13 +24,17 @@ public:
 
     virtual void initRender() = 0;
 
-    virtual void updateViewMatrix(const float* mat) const;
+    virtual void updateViewMatrix(const float* mat) const = 0;
 
-    virtual void updateProjectionMatrix(const float* mat) const;
+    virtual void updateProjectionMatrix(const float* mat) const = 0;
 
-    void attachShaders(const std::string& vsFile, const std::string& fsFile);
+    virtual void attachShaders(const std::string& vsFile, const std::string& fsFile) = 0;
 
-    void attachTexture(const std::string& imagePath);
+    virtual void attachTexture(const std::string& imagePath) = 0;
+
+    virtual void setVisibility(bool isVisible) = 0;
+
+    virtual bool getVisibility() = 0;
 
     /******
      * translate model
@@ -32,7 +43,7 @@ public:
      * @param z translate direction z
      * @param speed normalized speed per second
      */
-    void translate(float x, float y, float z, float speed = 0) const;
+    virtual void translate(float x, float y, float z, float speed = 0) const = 0;
 
     /*******
      * rotate model angle radian around axis
@@ -42,7 +53,7 @@ public:
      * @param angle rotation angle in radian
      * @param speed delta rotation in radian per second
      */
-    void rotate(float x, float y, float z, float angle, float speed = 0) const;
+    virtual void rotate(float x, float y, float z, float angle, float speed = 0) const = 0;
 
     /*******
      * scale model in three dimensions
@@ -50,13 +61,11 @@ public:
      * @param y y axis scale
      * @param z z axis scale
      */
-    void scale(float x, float y, float z) const;
-
-
-    std::shared_ptr<Shader> shader = nullptr;
-    std::shared_ptr<Animator> animator = nullptr;
+    virtual void scale(float x, float y, float z) const = 0;
 };
 
 std::shared_ptr<BaseRender> createModel(const std::string& modelFile);
+
+std::shared_ptr<BaseRender> createModel(GeometryType geo);
 
 #endif //GRAPHICS_BASERENDER_H
