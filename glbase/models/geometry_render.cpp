@@ -51,6 +51,10 @@ std::vector<float> PolygonFactory::createDefaultCircle() {
     return vertices;
 }
 
+GeometryRenderBase::GeometryRenderBase() {
+    attachShaders("resource/shader/polygon.vert", "resource/shader/yuv420_planar_render.frag");
+}
+
 PolygonRender::PolygonRender(GeometryType pType): type(pType) {
     bufferFormat = VertexBufferFormat::PT32;
 
@@ -64,7 +68,6 @@ PolygonRender::PolygonRender(GeometryType pType): type(pType) {
 }
 
 void PolygonRender::initRender() {
-    shader = make_shared<Shader>("resource/shader/polygon.vert", "resource/shader/plain.frag");
     initGL();
 }
 

@@ -3,23 +3,7 @@
 #include <string>
 #include <vector>
 #include "cgutils.h"
-
-class Texture {
-public:
-    explicit Texture(const std::string& imagePath = "");
-    Texture(const Texture& tex);
-    ~Texture() = default;
-
-    void setParam(GLenum type, GLint value) const;
-
-    GLuint getTexture() const;
-
-    void bind(int unit = 0) const;
-
-private:
-    GLuint texture;
-    std::string imagePath;
-};
+#include "texture.h"
 
 class Shader {
 public:
@@ -41,10 +25,11 @@ public:
     void setViewMatrix(const float* mat) const;
     void setProjectionMatrix(const float* mat) const;
 
-    void attachTexture(const std::string& texName, const Texture& tex);
+    void attachTexture(const std::string &tex);
+    std::shared_ptr<YUVTexture> attachTexture();
 
 #pragma mark for debug use
-    std::vector<std::string> getAllUniformList() const;
+    [[nodiscard]] std::vector<std::string> getAllUniformList() const;
 
 private:
     GLint getUniformLocation(const std::string &name) const;
@@ -52,12 +37,12 @@ private:
 
     void init();
 
-    GLuint vertShader;
-    GLuint fragShader;
-    GLuint program;
+    GLuint vertShader = 0;
+    GLuint fragShader = 0;
+    GLuint program = 0;
 
     std::string vertSourceFile;
     std::string fragSourceFile;
 
-    std::vector<Texture> textures;
+    std::vector<std::shared_ptr<Texture>> textures;
 };

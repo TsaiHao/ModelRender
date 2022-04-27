@@ -27,8 +27,11 @@ using WindowType = void*;
 #define VIEW_UNIFORM "view"
 #define PROJECTION_UNIFORM "projection"
 #define TEXTURE_UNIFORM "texture1"
+#define TEXTURE_UNIFORM2 "texture2"
+#define TEXTURE_UNIFORM3 "texture3"
 #define MIX_RATION_UNIFORM "textureRatio"
 #define LIGHT_SOURCE_POSITION "lightPos"
 #define CAMERA_POSITION "cameraPos"
+#define PIXEL_FORMAT "pixelFormat"
 
 #endif //GRAPHICS_CGMACROS_H

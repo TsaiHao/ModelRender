@@ -15,7 +15,8 @@ set(RENDERER_SOURCE_FILES
 set(UTIL_SOURCE_FILES
         utils/cgutils.cpp
         utils/shader.cpp
-        utils/animator.cpp)
+        utils/animator.cpp
+        utils/texture.cpp)
 
 set(SCENE_SOURCE_FILES
         scene/camera.cpp
@@ -60,6 +61,7 @@ endif()
 
 if (GEN_EXE)
     add_compile_definitions(USE_GLFW)
+    add_compile_definitions(GLFW_INCLUDE_NONE)
     target_link_libraries(${LIB_NAME} glfw)
     list(APPEND GL_INCLUDE_DIR thirdparty/glfw/include)
 endif()

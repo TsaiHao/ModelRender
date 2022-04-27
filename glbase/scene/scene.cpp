@@ -29,7 +29,7 @@ void Scene::setCameraMatrix(const std::array<float, 3> &position, const std::arr
 }
 
 Scene::Scene(): cam(std::make_shared<Camera>(
-        Camera::Vec3({3.f, 0.f, -3.f}),
+        Camera::Vec3({0.f, 0.f, -1.f}),
         Camera::Vec3({0.f, 0.f, 0.f}),
         Camera::Vec3({0.f, 1.f, 0.f}))),
                 nativeWindow(nullptr) {

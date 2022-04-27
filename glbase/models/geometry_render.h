@@ -5,6 +5,8 @@
 #include "base_render_impl.h"
 
 class GeometryRenderBase: public BaseRenderImpl {
+public:
+    GeometryRenderBase();
 };
 
 struct PolygonFactory {

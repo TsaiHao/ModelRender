@@ -21,7 +21,8 @@ int main(int argc, char **argv)
     scene.addLightSource(lightSource);
      */
 
-    auto triangle = createModel(GeometryType::Circle);
+    auto triangle = createModel(GeometryType::Rectangle);
+    triangle->attachTexture("resource/texture/wall.jpg");
     scene.addModel(triangle);
 
     scene.draw();
