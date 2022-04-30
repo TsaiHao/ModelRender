@@ -3,8 +3,8 @@
 
 #include <string>
 #include <vector>
-#include "glad/glad.h"
 #include "cgdefs.h"
+#include "cgutils.h"
 
 enum class ColorFormat {
     YUV420_Planar,

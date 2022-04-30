@@ -1,5 +1,5 @@
 #include "cgutils.h"
-#include "user_interface.h"
+#include "glfw_user_interface.h"
 
 #include <utility>
 #include <functional>
@@ -37,6 +37,11 @@ GLFWUserInterface::GLFWUserInterface(std::shared_ptr<Camera> cam, GLFWwindow* wi
     });
 
     Logger::message("glfw user interface created");
+}
+
+void GLFWUserInterface::processEvents() {
+    glfwSwapBuffers(window);
+    glfwPollEvents();
 }
 
 void GLFWUserInterface::scrollEvent(GLFWwindow *win, double xOffset, double yOffset) {

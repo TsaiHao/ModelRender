@@ -105,8 +105,6 @@ void Scene::renderAModel(const std::shared_ptr<BaseRenderImpl>& model, const flo
 }
 
 void Scene::renderAFrame() {
-
-
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
 
@@ -121,8 +119,9 @@ void Scene::renderAFrame() {
     }
 
     renderAModel(lightSource, VPTR(lightPos));
-    glfwSwapBuffers(nativeWindow->window);
-    glfwPollEvents();
+    if (ui) {
+        ui->processEvents();
+    }
 }
 
 void Scene::addModel(std::shared_ptr<BaseRender> model) {

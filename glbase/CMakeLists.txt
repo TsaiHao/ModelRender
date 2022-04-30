@@ -36,7 +36,7 @@ list(APPEND GL_INCLUDE_DIR
 
 if (GEN_EXE)
     add_subdirectory(thirdparty/glfw)
-    list(APPEND SCENE_SOURCE_FILES scene/user_interface.cpp)
+    list(APPEND SCENE_SOURCE_FILES scene/ui/glfw_user_interface.cpp)
 endif()
 
 if (MOBILE_PLATFORM)

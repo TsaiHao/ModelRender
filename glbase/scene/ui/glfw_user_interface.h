@@ -1,21 +1,18 @@
-#ifndef GRAPHICS_USER_INTERFACE_H
-#define GRAPHICS_USER_INTERFACE_H
+#ifndef GLFW_USER_INTERFACE_H
+#define GLFW_USER_INTERFACE_H
 
 #include <memory>
+#include "ui_base.h"
 #include "camera.h"
 
 class Camera;
 class GLFWwindow;
 
-class GLFWUserInterface {
-    enum class State: int {
-        Idle,
-        CameraTranslating,
-        CameraRotating,
-    };
-
+class GLFWUserInterface: public UIBase {
 public:
     GLFWUserInterface(std::shared_ptr<Camera> cam, GLFWwindow* window);
+
+    void processEvents();
 
 private:
     void scrollEvent(GLFWwindow* win, double xOffset, double yOffset);
@@ -30,8 +27,6 @@ private:
 
     void cameraRotatePreview(GLFWwindow* win, double xPos, double yPos);
 
-    State state;
-
     GLFWwindow* window;
 
     std::shared_ptr<Camera> camera;
@@ -42,6 +37,4 @@ private:
     } mouseOrigin;
 };
 
-
-
-#endif //GRAPHICS_USER_INTERFACE_H
+#endif //GRAPHICS_UI_BASE_H

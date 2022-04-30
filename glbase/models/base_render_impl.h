@@ -4,8 +4,7 @@
 #include <numeric>
 #include <vector>
 #include "base_render.h"
-
-#include "glad/glad.h"
+#include "cgutils.h"
 
 // vertex buffer order and size, P for position, T for texture, N for normal
 enum class VertexBufferFormat {
