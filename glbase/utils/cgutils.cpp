@@ -1,6 +1,4 @@
-#ifndef __ANDROID__
-#include "glad/glad.h"
-#else
+#ifdef __ANDROID__
 #include <android/log.h>
 #endif
 #include "cgutils.h"

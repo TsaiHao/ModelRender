@@ -1,15 +1,15 @@
-out vec4 fragColor;
+out mediump vec4 fragColor;
 
-in vec3 texCoord;
-in vec3 vertNorm;
-in vec4 vertPos;
-in vec4 fragPos;
+in mediump vec3 texCoord;
+in mediump vec3 vertNorm;
+in mediump vec4 vertPos;
+in mediump vec4 fragPos;
 
-uniform vec4 lightPos;
-uniform vec4 cameraPos;
+uniform mediump vec4 lightPos;
+uniform mediump vec4 cameraPos;
 
-uniform sampler2D texture1;
-uniform float textureRatio;
+uniform mediump sampler2D texture1;
+uniform mediump float textureRatio;
 
 void main() {
     float ambientStrength = 0.2f;

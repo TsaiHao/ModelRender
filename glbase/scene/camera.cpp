@@ -40,7 +40,7 @@ void Camera::setUp(const Camera::Vec3 &up) {
 
 void Camera::updateViewMatrix() {
      view = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
-     if (isnan(view[0][0])) {
+     if (std::isnan(view[0][0])) {
          Logger::error("nan detected");
      }
 }

@@ -6,10 +6,9 @@
 #include <string>
 
 #include "base_render_impl.h"
-#include "glad/glad.h"
+#include "cgutils.h"
 
 class Shader;
-class GLObject;
 class ObjLoader;
 class Animator;
 class AnimatorActor;

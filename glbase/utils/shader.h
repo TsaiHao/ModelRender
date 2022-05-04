@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include "cgutils.h"
 #include "texture.h"
 

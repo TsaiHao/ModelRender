@@ -3,7 +3,6 @@
 #include <vector>
 #include <sstream>
 
-#include "glad/glad.h"
 #include "shader.h"
 #include "cgutils.h"
 

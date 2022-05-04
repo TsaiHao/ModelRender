@@ -6,7 +6,7 @@
 #include "shader.h"
 #include "render_helper.h"
 #include "base_render.h"
-#include "user_interface.h"
+#include "ui/glfw_user_interface.h"
 
 using namespace std;
 
@@ -18,7 +18,9 @@ public:
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f),
                                             float(GL_WINDOW_WIDTH) / float(GL_WINDOW_HEIGHT),
-                                        0.1f, 100.0f);;
+                                        0.1f, 100.0f);
+
+    std::function<bool()> shouldClose = [] { return false; };
 };
 
 void Scene::setCameraMatrix(const std::array<float, 3> &position, const std::array<float, 3> &target,
@@ -63,6 +65,7 @@ void Scene::init() {
     nativeWindow->window = glfwCreateWindow(GL_WINDOW_WIDTH, GL_WINDOW_HEIGHT, "Model Render", nullptr, nullptr);
     nativeWindow->windowHeight = GL_WINDOW_HEIGHT;
     nativeWindow->windowWidth = GL_WINDOW_WIDTH;
+    nativeWindow->shouldClose = [this]() { return glfwWindowShouldClose(nativeWindow->window); };
     if (!nativeWindow->window) {
         Logger::error("create window failed");
         glfwTerminate();
@@ -105,8 +108,6 @@ void Scene::renderAModel(const std::shared_ptr<BaseRenderImpl>& model, const flo
 }
 
 void Scene::renderAFrame() {
-
-
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     glClearColor(0.2f, 0.3f, 0.4f, 1.0f);
 
@@ -121,8 +122,9 @@ void Scene::renderAFrame() {
     }
 
     renderAModel(lightSource, VPTR(lightPos));
-    glfwSwapBuffers(nativeWindow->window);
-    glfwPollEvents();
+    if (ui) {
+        ui->processEvents();
+    }
 }
 
 void Scene::addModel(std::shared_ptr<BaseRender> model) {
@@ -131,7 +133,7 @@ void Scene::addModel(std::shared_ptr<BaseRender> model) {
 }
 
 void Scene::draw() {
-    while (!glfwWindowShouldClose(nativeWindow->window)) {
+    while (!nativeWindow->shouldClose()) {
         renderAFrame();
     }
 
@@ -145,7 +147,6 @@ void Scene::draw() {
 }
 
 Scene::~Scene() {
-    glfwTerminate();
 }
 
 void Scene::addLightSource(const shared_ptr<BaseRender> &lightModel) {

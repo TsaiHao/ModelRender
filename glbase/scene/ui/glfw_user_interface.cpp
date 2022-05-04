@@ -1,12 +1,10 @@
 #include "cgutils.h"
-#include "user_interface.h"
+#include "glfw_user_interface.h"
 
 #include <utility>
-#include <functional>
 
 #include "camera.h"
 #include "GLFW/glfw3.h"
-#include "glm/gtc/matrix_transform.hpp"
 
 using namespace std;
 using namespace std::placeholders;
@@ -16,8 +14,9 @@ static inline GLFWUserInterface* getThis(GLFWwindow* win) {
 }
 
 GLFWUserInterface::GLFWUserInterface(std::shared_ptr<Camera> cam, GLFWwindow* win):
-    camera(cam), window(win), state(State::Idle)
+    camera(cam), window(win)
 {
+    state = State::Idle;
     camera = std::move(cam);
 
     glfwSetKeyCallback(window, [](GLFWwindow* w, int key, int scancode, int action, int mods) {
@@ -37,6 +36,11 @@ GLFWUserInterface::GLFWUserInterface(std::shared_ptr<Camera> cam, GLFWwindow* wi
     });
 
     Logger::message("glfw user interface created");
+}
+
+void GLFWUserInterface::processEvents() {
+    glfwSwapBuffers(window);
+    glfwPollEvents();
 }
 
 void GLFWUserInterface::scrollEvent(GLFWwindow *win, double xOffset, double yOffset) {
