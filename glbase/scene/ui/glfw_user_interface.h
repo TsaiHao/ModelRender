@@ -5,7 +5,6 @@
 #include "ui_base.h"
 #include "camera.h"
 
-class Camera;
 class GLFWwindow;
 
 class GLFWUserInterface: public UIBase {
