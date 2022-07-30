@@ -18,4 +18,5 @@ target_include_directories(graphics PUBLIC "$<TARGET_PROPERTY:glbase,INCLUDE_DIR
 add_custom_command(TARGET graphics POST_BUILD
 		COMMENT "copy resource file"
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
-		${CMAKE_SOURCE_DIR}/resource ${CMAKE_CURRENT_BINARY_DIR}/resource)
+		${CMAKE_SOURCE_DIR}/resource ${CMAKE_CURRENT_BINARY_DIR}/resource
+)
