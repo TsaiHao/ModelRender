@@ -1,3 +1,5 @@
+#include <functional>
+
 #include "obj_render.h"
 #include "scene.h"
 #include "camera.h"

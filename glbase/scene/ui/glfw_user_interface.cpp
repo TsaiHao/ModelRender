@@ -1,9 +1,10 @@
+#include <utility>
+#include <functional>
+
 #include "cgutils.h"
 #include "glfw_user_interface.h"
-
-#include <utility>
-
 #include "camera.h"
+
 #include "GLFW/glfw3.h"
 
 using namespace std;
