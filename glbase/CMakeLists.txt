@@ -1,6 +1,12 @@
+cmake_minimum_required(VERSION 3.12)
+project(graphics)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(LIB_NAME glbase)
 
 option(ENABLE_BUILD_TEST "enable build tests" OFF)
+option(ENABLE_BUILD_EXAMPLE "build example executable" ON)
 
 set(RENDERER_SOURCE_FILES
         models/base_render.cpp
@@ -36,17 +42,10 @@ list(APPEND GL_INCLUDE_DIR
 
 add_subdirectory(thirdparty)
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Android")
-    set(GLAD_SOURCE_FILES )
-else()
-    list(APPEND SCENE_SOURCE_FILES scene/ui/glfw_user_interface.cpp)
-endif()
-
 add_library(
         ${LIB_NAME} STATIC 
         ${UTIL_SOURCE_FILES}
         ${RENDERER_SOURCE_FILES}
-        ${GLAD_SOURCE_FILES}
         ${SCENE_SOURCE_FILES}
         ${MESH_LOADER_FILES}
 )
@@ -57,6 +56,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Android")
 else()
     add_compile_definitions(USE_GLFW)
     add_compile_definitions(GLFW_INCLUDE_NONE)
+    target_sources(${LIB_NAME} PRIVATE scene/ui/glfw_user_interface.cpp)
 endif()
 
 target_include_directories(
@@ -72,4 +72,8 @@ target_link_libraries(
 
 if (${ENABLE_BUILD_TEST})
     add_subdirectory(test)
+endif()
+
+if (${ENABLE_BUILD_EXAMPLE})
+    add_subdirectory(example)
 endif()
