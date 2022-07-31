@@ -1,0 +1,3 @@
+[submodule "glbase/thirdparty/imgui"]
+	path = glbase/thirdparty/imgui
+	url = git@github.com:ocornut/imgui.git
