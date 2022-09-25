@@ -7,6 +7,10 @@
 
 using namespace std;
 
+#ifndef M_PI
+#define M_PI 3.1415926
+#endif
+
 std::vector<float> PolygonFactory::createDefaultTriangle() {
     auto leftDownY = -tan(glm::radians(30.0f));
     float upY = 0.667f * cos(1.0f / 6 * M_PI);

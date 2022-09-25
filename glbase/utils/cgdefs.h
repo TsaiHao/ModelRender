@@ -11,8 +11,8 @@ using WindowType = GLFWwindow*;
 using WindowType = void*;
 #endif
 
-#define GL_WINDOW_WIDTH (300)
-#define GL_WINDOW_HEIGHT (300)
+#define GL_WINDOW_WIDTH (800)
+#define GL_WINDOW_HEIGHT (800)
 
 #define VPTR(x) (glm::value_ptr(x))
 
