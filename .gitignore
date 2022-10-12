@@ -6,3 +6,4 @@ glm
 .idea
 .gitignore
 .vscode
+CMakeLists.txt.user

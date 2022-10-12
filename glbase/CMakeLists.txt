@@ -50,6 +50,8 @@ add_library(
         ${MESH_LOADER_FILES}
 )
 
+target_compile_options(${LIB_NAME} PRIVATE "-Wno-deprecated-volatile")
+
 if (${CMAKE_SYSTEM_NAME} MATCHES "Android")
     find_library(log-lib log)
     target_link_libraries(${LIB_NAME} PRIVATE GLESv3 android ${log-lib})

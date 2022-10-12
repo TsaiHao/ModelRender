@@ -43,6 +43,10 @@ void ObjRender::initRender() {
 
 void ObjRender::draw() {
     shader->use();
+    if (texture != nullptr) {
+        texture->bind();
+    }
+
     glBindVertexArray(VAO);
     int offset = 0;
 

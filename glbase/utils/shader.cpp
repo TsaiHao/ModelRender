@@ -57,38 +57,9 @@ Shader::~Shader() {
     glDeleteProgram(program);
 }
 
-void Shader::use(const bool bindTextures) const {
+void Shader::use() const {
     glUseProgram(program);
-    if (bindTextures) {
-        for (int i = 0; i < textures.size(); ++i) {
-            textures[i]->bind();
-        }
-    }
     _glCheckError();
-}
-
-void Shader::attachTexture(const string &tex) {
-    if (textures.size() > 16) {
-        return;
-    }
-
-    use();
-    auto t = make_shared<ImageTexture>(tex, textures.size());
-    t->init(program);
-    textures.emplace_back(t);
-    setFloat(MIX_RATION_UNIFORM, 0.5f);
-}
-
-std::shared_ptr<YUVTexture> Shader::attachTexture() {
-    if (textures.size() > 16) {
-        return nullptr;
-    }
-
-    use();
-    auto t = make_shared<YUVTexture>(textures.size());
-    t->init(program);
-    textures.emplace_back(t);
-    return t;
 }
 
 GLint Shader::getUniformLocation(const std::string &name) const {
@@ -100,7 +71,6 @@ Shader::Shader(const Shader &shd) {
     program = shd.program;
     vertShader = shd.vertShader;
     fragShader = shd.fragShader;
-    textures = shd.textures;
 }
 
 void Shader::setMat4(const string &name, const float *value) const {

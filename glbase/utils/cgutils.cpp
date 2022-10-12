@@ -142,6 +142,7 @@ int glCheckError_(const char *file, int line) {
             case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
         }
         Logger::error("gl error: %s[%d]: %s", file, line, error.c_str());
+        assert(false && "gl error");        
     }
     return static_cast<int>(errorCode);
 }
@@ -179,7 +180,7 @@ void Logger::warn(const string &msg) {
 #endif
 }
 
-void Logger::message(const std::string& msg)
+void Logger::info(const std::string& msg)
 {
 #ifndef __ANDROID__
     cout << "Graphics Message: " << msg << endl;
@@ -197,5 +198,5 @@ Performance::Performance(std::string name)
 Performance::~Performance()
 {
     endTimeUs = getTime() * 1e6;
-    Logger::message(tag + " consumed time: " + to_string(float(endTimeUs - startTimeUs) / 1000) + " ms");
+    Logger::info(tag + " consumed time: " + to_string(float(endTimeUs - startTimeUs) / 1000) + " ms");
 }

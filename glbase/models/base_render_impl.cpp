@@ -55,7 +55,7 @@ void BaseRenderImpl::scale(float x, float y, float z) const {
 }
 
 void BaseRenderImpl::attachTexture(const std::string &imagePath) {
-    shader->attachTexture(imagePath);
+    texture = createTexture(imagePath);
 }
 
 void BaseRenderImpl::setVisibility(bool visible) {

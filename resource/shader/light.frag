@@ -28,5 +28,5 @@ void main() {
 
     fragColor = vec4(ambientColor + diffuseColor + specularColor, 1.0f);
 
-    fragColor = mix(fragColor, texture(texture1, texCoord.xy), textureRatio);
+    fragColor = mix(fragColor, texture(texture1, texCoord.xy), 0.8);
 }
