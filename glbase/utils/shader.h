@@ -15,7 +15,7 @@ public:
 
     void updateShaders(const std::string& vf, const std::string& ff);
 
-    void use(bool bindTextures = true) const;
+    void use() const;
 
     void setInt(const std::string &name, int value) const;
     void setFloat(const std::string& name, float value) const;
@@ -25,9 +25,6 @@ public:
     void setModelMatrix(const float* mat) const;
     void setViewMatrix(const float* mat) const;
     void setProjectionMatrix(const float* mat) const;
-
-    void attachTexture(const std::string &tex);
-    std::shared_ptr<YUVTexture> attachTexture();
 
 #pragma mark for debug use
     [[nodiscard]] std::vector<std::string> getAllUniformList() const;
@@ -44,6 +41,4 @@ private:
 
     std::string vertSourceFile;
     std::string fragSourceFile;
-
-    std::vector<std::shared_ptr<Texture>> textures;
 };

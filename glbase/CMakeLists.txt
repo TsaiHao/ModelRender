@@ -50,6 +50,8 @@ add_library(
         ${MESH_LOADER_FILES}
 )
 
+target_compile_options(${LIB_NAME} PRIVATE "-Wno-deprecated-volatile")
+
 if (${CMAKE_SYSTEM_NAME} MATCHES "Android")
     find_library(log-lib log)
     target_link_libraries(${LIB_NAME} PRIVATE GLESv3 android ${log-lib})
@@ -59,15 +61,22 @@ else()
     target_sources(${LIB_NAME} PRIVATE scene/ui/glfw_user_interface.cpp)
 endif()
 
+set(FREE_TYPE_INCLUDE_DIR "")
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    set(FREE_TYPE_INCLUDE_DIR "/usr/include/freetype2")
+endif()
+
 target_include_directories(
     ${LIB_NAME} PUBLIC 
     ${GL_INCLUDE_DIR}
+    ${FREE_TYPE_INCLUDE_DIR}
     "$<TARGET_PROPERTY:cg3rd,INCLUDE_DIRECTORIES>"
 )
 
 target_link_libraries(
     ${LIB_NAME} PUBLIC
     cg3rd
+    freetype
 )
 
 if (${ENABLE_BUILD_TEST})

@@ -1,10 +1,10 @@
-#ifndef GRAPHICS_BASE_RENDER_IMPL_H
-#define GRAPHICS_BASE_RENDER_IMPL_H
+#pragma once
 
 #include <numeric>
 #include <vector>
 #include "base_render.h"
 #include "cgutils.h"
+#include "texture.h"
 
 // vertex buffer order and size, P for position, T for texture, N for normal
 enum class VertexBufferFormat {
@@ -50,8 +50,7 @@ protected:
     VertexBufferFormat bufferFormat = VertexBufferFormat::PTN433;
     std::vector<float> vertices;        // store vertices' position/texture/normal data
 
+    std::shared_ptr<ImageTexture> texture;
+
     bool isVisible = true;
 };
-
-
-#endif //GRAPHICS_BASE_RENDER_IMPL_H

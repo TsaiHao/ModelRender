@@ -62,14 +62,14 @@ shared_ptr<AnimatorActor> AnimatorActor::getActor(const AnimationType t, const s
     switch (t) {
         case AnimationType::Rotate:
             actor = make_shared<AnimatorRotator>(t, i);
-            Logger::message("get a rotate actor, id " + i);
+            Logger::info("get a rotate actor, id " + i);
             break;
         case AnimationType::Scale:
-            Logger::message("get a scale actor, id " + i);
+            Logger::info("get a scale actor, id " + i);
             actor = make_shared<AnimatorActor>(t, i);
             break;
         case AnimationType::Translate:
-            Logger::message("get a translate actor, id " + i);
+            Logger::info("get a translate actor, id " + i);
             actor = make_shared<AnimatorActor>(t, i);
             break;
         default:

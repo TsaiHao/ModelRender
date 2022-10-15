@@ -1,15 +1,33 @@
 #include <math.h>
 #include "geometry_render.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+#include "glm/ext/matrix_transform.hpp"
 #include "shader.h"
 #include "animator.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 using namespace std;
 
-#ifndef M_PI
-#define M_PI 3.1415926
-#endif
+int initFreeType() {
+    FT_Library ft;
+    int error;
+
+    error = FT_Init_FreeType(&ft);
+    if (error) {
+        Logger::error("init freetype failed %d", error);
+        exit(1);
+    }
+
+    FT_Face face;
+    error = FT_New_Face(ft, "resource/font/DejaVuSansMono.ttf", 0, &face);
+    if (error) {
+        Logger::error("load face failed %d", error);
+        exit(1);
+    }
+
+    return 0;
+}
 
 std::vector<float> PolygonFactory::createDefaultTriangle() {
     auto leftDownY = -tan(glm::radians(30.0f));
@@ -72,6 +90,7 @@ PolygonRender::PolygonRender(GeometryType pType): type(pType) {
 }
 
 void PolygonRender::initRender() {
+    initFreeType();
     initGL();
 }
 

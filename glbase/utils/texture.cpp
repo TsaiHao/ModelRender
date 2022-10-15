@@ -1,166 +1,123 @@
 #include "texture.h"
 
 #include <utility>
+#include <vector>
 #include "stb/stb_image.h"
 #include "cgutils.h"
 
 using namespace std;
 
-std::pair<GLint, GLint> convert2GLFormat(ColorFormat fmt) {
-    switch (fmt) {
-        case ColorFormat::YUV420_Planar:
-        case ColorFormat::YUV420_SemiPlanar:
-        case ColorFormat::R8:
-            return {GL_R8, GL_RED};
-        case ColorFormat::RGB888:
-            return {GL_RGB8, GL_RGB};
-        case ColorFormat::RGBA8888:
-            return {GL_RGBA8, GL_RGBA};
+struct GLFormatTable {
+    ColorFormat colorFormat;
+    int nPlane;
+    std::vector<GLint> glInternalFormat;
+    std::vector<GLenum> glFormat;
+};
+
+static const std::vector<GLFormatTable> _ColorFormatQueryTable = {
+    {ColorFormat::R8,       1, {GL_R8},                 {GL_RED}                },
+    {ColorFormat::RGB888,   1, {GL_RGB8},               {GL_RGB}                },
+    {ColorFormat::RGBA8888, 1, {GL_RGBA},               {GL_RGBA}               },
+    {ColorFormat::YUV420P,  3, {GL_R8, GL_R8, GL_R8},   {GL_RED, GL_RED, GL_RED}},
+    {ColorFormat::YUV420SP, 2, {GL_R8, GL_R8},          {GL_RED, GL_RG}         }
+};
+
+static inline GLFormatTable findFormat(ColorFormat format) {
+    auto iter = std::find_if(_ColorFormatQueryTable.begin(), _ColorFormatQueryTable.end(), 
+        [format](const GLFormatTable& ft) {
+            return ft.colorFormat == format;
+        });
+    
+    if (iter == _ColorFormatQueryTable.end()) {
+        Logger::error("find format failed %d", (int)format);
+        assert(false);
     }
+
+    return *iter;
 }
 
-TextureBuffer::TextureBuffer(unsigned char* data, int w, int h, ColorFormat fmt):
-        buffer(data), format(fmt), width(w), height(h) {
-    int64_t bufferSize = 0;
-    switch (fmt) {
-        case ColorFormat::YUV420_Planar:
-        case ColorFormat::YUV420_SemiPlanar:
-            bufferSize = w * h * 1.5; break;
-        case ColorFormat::RGBA8888:
-            bufferSize = w * h * 4; break;
-        case ColorFormat::R8:
-            bufferSize = w * h; break;
-        case ColorFormat::RGB888:
-            bufferSize = w * h * 3; break;
-    }
-}
-
-const unsigned char* TextureBuffer::data() const {
-    return buffer;
-}
-
-size_t TextureBuffer::size() const {
-    return 0;
-}
-
-ImageTexture::ImageTexture() = default;
-
-ImageTexture::ImageTexture(std::string img, int u): imagePath(std::move(img)), unit(u) {
-}
-
-
-void ImageTexture::setParam(GLenum type, GLint value) const {
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, type, value);
-}
-
-void ImageTexture::bind() const {
-    glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    _glCheckError();
-}
-
-void ImageTexture::bufferData(const unsigned char* data, int width, int height, ColorFormat format) const {
-    bind();
-    auto glFormat = convert2GLFormat(format);
-    glTexImage2D(GL_TEXTURE_2D, 0, glFormat.first, width, height, 0, glFormat.second, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-}
-
-ImageTexture::ImageTexture(const ImageTexture &tex) {
-    texture = tex.texture;
-    imagePath = tex.imagePath;
-}
-
-static GLuint genTexture(int unit, GLuint program, const char* textureUniform, int pixFormat) {
+static inline GLuint genTexture(int unit) {
     GLuint texture;
     glGenTextures(1, &texture);
     glActiveTexture(unit + GL_TEXTURE0);
-    glUniform1i(glGetUniformLocation(program, textureUniform), unit);
-    glUniform1i(glGetUniformLocation(program, PIXEL_FORMAT), pixFormat);
     glBindTexture(GL_TEXTURE_2D, texture);
+    /*
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    */
+
+    //glGenerateMipmap(GL_TEXTURE_2D);
+    _glCheckError();
 
     return texture;
 }
 
-void ImageTexture::init(GLuint currentProgram) {
-    texture = genTexture(unit, currentProgram, TEXTURE_UNIFORM, 0);
+ImageTexture::ImageTexture(int width, int height, ColorFormat format) {
+    auto glFormat = findFormat(format);
 
-    if (!imagePath.empty()) {
-        int width, height, nChannel;
-        stbi_set_flip_vertically_on_load(true);
-        unsigned char *data = stbi_load(imagePath.c_str(), &width, &height, &nChannel, 0);
-        if (data) {
-            ColorFormat format = ColorFormat::RGBA8888;
-            if (nChannel == 3) {
-                format = ColorFormat::RGB888;
-            } else if (nChannel == 1) {
-                format = ColorFormat::R8;
-            }
-
-            auto glFormat = convert2GLFormat(format);
-            glTexImage2D(GL_TEXTURE_2D, 0, glFormat.first, width, height, 0, glFormat.second, GL_UNSIGNED_BYTE, data);
-            glGenerateMipmap(GL_TEXTURE_2D);
-        }
-        stbi_image_free(data);
+    for (int i = 0; i < glFormat.nPlane; ++i) {
+        auto tid = genTexture(i);
+        textureId.push_back(tid);
     }
 }
 
-GLuint ImageTexture::getTexture() const {
-    return texture;
+void ImageTexture::setParam(GLenum type, GLint value) const {
+    for (auto && id : textureId) {
+        glBindTexture(GL_TEXTURE_2D, id);
+        glTexParameteri(GL_TEXTURE_2D, type, value);
+    }
 }
 
-
-YUVTexture::YUVTexture(int u): unit1(u) {
+void ImageTexture::bind() const {
+    for (int i = 0; i < textureId.size(); ++i) {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, textureId[i]);
+    }
+    _glCheckError();
 }
 
-void YUVTexture::setParam(GLenum type, GLint value) const {
+void ImageTexture::bufferData(const TextureBuffer &buffer) const {
+    bind();
+    auto glFormat = findFormat(buffer.format);
 
-}
+    for (int i = 0; i < textureId.size(); ++i) {
+        glTexImage2D(GL_TEXTURE_2D, 
+                        0, 
+                        glFormat.glInternalFormat[i], 
+                        buffer.width, 
+                        buffer.height, 
+                        0, 
+                        glFormat.glFormat[i], 
+                        GL_UNSIGNED_BYTE, 
+                        buffer.buffer[i]);
 
-GLuint YUVTexture::getTexture() const {
-    return texture.front();
-}
-
-void YUVTexture::bind() const {
-    glActiveTexture(GL_TEXTURE0 + unit1);
-    glBindTexture(GL_TEXTURE_2D, texture[0]);
-
-    glActiveTexture(GL_TEXTURE0 + unit1 + 1);
-    glBindTexture(GL_TEXTURE_2D, texture[1]);
-
-    glActiveTexture(GL_TEXTURE0 + unit1 + 2);
-    glBindTexture(GL_TEXTURE_2D, texture[2]);
-}
-
-void YUVTexture::init(GLuint currentProgram) {
-    GLuint tex = genTexture(unit1, currentProgram, TEXTURE_UNIFORM, 1);
-    GLuint tex2 = genTexture(unit1 + 1, currentProgram, TEXTURE_UNIFORM2, 1);
-    GLuint tex3 = genTexture(unit1 + 2, currentProgram, TEXTURE_UNIFORM3, 1);
-    texture = {tex, tex2, tex3};
-}
-
-void YUVTexture::bufferData(const uint8_t* const* yuvData, int w, int h, ColorFormat fmt) {
-    if (texture.empty()) {
-        Logger::error("buffer data into uninitialized texture");
-        return;
+        glGenerateMipmap(GL_TEXTURE_2D);
     }
 
-    glActiveTexture(GL_TEXTURE0 + unit1);
-    glBindTexture(GL_TEXTURE_2D, texture[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, w, h, 0, GL_RED, GL_UNSIGNED_BYTE, yuvData[0]);
-
-    glActiveTexture(GL_TEXTURE0 + unit1 + 1);
-    glBindTexture(GL_TEXTURE_2D, texture[1]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, w / 2, h / 2, 0, GL_RED, GL_UNSIGNED_BYTE, yuvData[1]);
-
-    glActiveTexture(GL_TEXTURE0 + unit1 + 2);
-    glBindTexture(GL_TEXTURE_2D, texture[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, w / 2, h / 2, 0, GL_RED, GL_UNSIGNED_BYTE, yuvData[2]);
+    _glCheckError();
 }
 
-YUVTexture::~YUVTexture() = default;
+std::shared_ptr<ImageTexture> createTexture(std::string_view imgPath) {
+    int width, height, channel;
+
+    unsigned char* data = stbi_load(imgPath.data(), &width, &height, &channel, 0);
+    if (data == nullptr) {
+        Logger::error("load image %s fail", imgPath.data());
+        assert(false);
+    }
+
+    ColorFormat fmt = ColorFormat::RGB888;
+    if (channel == 4) {
+        fmt = ColorFormat::RGBA8888;
+    } else if (channel == 1) {
+        fmt = ColorFormat::R8;
+    }
+
+    auto tex = std::make_shared<ImageTexture>(width, height, fmt);
+    TextureBuffer buffer({data}, width, height, fmt);
+    tex->bufferData(buffer);
+
+    return tex;
+}

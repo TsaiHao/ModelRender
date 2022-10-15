@@ -36,7 +36,7 @@ GLFWUserInterface::GLFWUserInterface(std::shared_ptr<Camera> cam, GLFWwindow* wi
         getThis(win)->mouseEvent(win, button, action, mods);
     });
 
-    Logger::message("glfw user interface created");
+    Logger::info("glfw user interface created");
 }
 
 void GLFWUserInterface::processEvents() {
@@ -62,7 +62,7 @@ void GLFWUserInterface::keyEvent(GLFWwindow* win, int key, int scancode, int act
 void GLFWUserInterface::mouseEvent(GLFWwindow *win, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         if (action == GLFW_PRESS) {
-            Logger::message("left mouse button pressed");
+            Logger::info("left mouse button pressed");
 
             mouseOrigin = { make_unique<Camera>(*camera), 0, 0 };
             glfwGetCursorPos(window, &mouseOrigin.x0, &mouseOrigin.y0);
@@ -73,7 +73,7 @@ void GLFWUserInterface::mouseEvent(GLFWwindow *win, int button, int action, int 
 
             state = State::CameraTranslating;
         } else if (action == GLFW_RELEASE) {
-            Logger::message("left mouse button released");
+            Logger::info("left mouse button released");
 
             glfwSetCursorPosCallback(win, [](GLFWwindow* win, double x, double y) { } );
 

@@ -9,6 +9,7 @@
 #include <iterator>
 #include <stdexcept>
 #include <cstdio>
+#include <assert.h>
 
 #ifndef __ANDROID__
 #include "glad/glad.h"
@@ -94,7 +95,7 @@ class Logger {
 public:
     static void error(const std::string &msg);
     static void warn(const std::string &msg);
-    static void message(const std::string& msg);
+    static void info(const std::string& msg);
 
     template <typename ... Args>
     static void error(const std::string& fmt, Args ... args) {
@@ -111,7 +112,7 @@ public:
     template <typename ... Args>
     static void message(const std::string& fmt, Args ... args) {
         auto msg = formatString(fmt, args...);
-        Logger::message(msg);
+        Logger::info(msg);
     }
 };
 

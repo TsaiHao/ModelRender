@@ -6,6 +6,8 @@
 #include "cgutils.h"
 #include "shader.h"
 #include "animator.h"
+#include "cgdefs.h"
+
 using namespace std;
 
 ObjRender::ObjRender(std::string const &objFile) {
@@ -43,6 +45,13 @@ void ObjRender::initRender() {
 
 void ObjRender::draw() {
     shader->use();
+    if (texture != nullptr) {
+        shader->setInt(USE_TEXTURE, 1);
+        texture->bind();
+    } else {
+        shader->setInt(USE_TEXTURE, 0);
+    }
+
     glBindVertexArray(VAO);
     int offset = 0;
 

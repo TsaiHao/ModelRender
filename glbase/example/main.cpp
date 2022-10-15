@@ -1,10 +1,12 @@
 #include <array>
 #include "glbase.h"
+#include <iostream>
 
 int main(int argc, char **argv)
 {
     Scene scene;
-    scene.setCameraMatrix({ 0.f, 0.f, -4.0f }, {0, 0, 0}, {0 , 1, 0});
+    /*
+    scene.setCameraMatrix({0, 0, -3.0f}, {0, 0, 0}, {0, 1, 0});
 
     auto lightSource = createModel("resource/model/cube.obj");
 
@@ -15,7 +17,7 @@ int main(int argc, char **argv)
 
     auto cylinder= createModel("resource/model/polygon.obj");
     cylinder->attachShaders("resource/shader/mvp.vert", "resource/shader/light.frag");
-    cylinder->attachTexture("resource/texture/wall.jpg");
+    //dcylinder->attachTexture("resource/texture/wall.jpg");
     cylinder->scale(0.4f, 0.4f, 0.4f);
 
     scene.addModel(cylinder);
@@ -26,6 +28,10 @@ int main(int argc, char **argv)
     triangle->attachTexture("resource/texture/wall.jpg");
     scene.addModel(triangle);
     */
+
+    auto text = createModel(GeometryType::Rectangle);
+    text->attachShaders("resource/shader/polygon.vert", "resource/shader/text.frag");
+    scene.addModel(text);
 
     scene.draw();
 

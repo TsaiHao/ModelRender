@@ -1,10 +1,11 @@
 #include <functional>
 
+#include "glm/gtc/type_ptr.hpp"
+
 #include "obj_render.h"
 #include "scene.h"
 #include "camera.h"
 #include "cgutils.h"
-#include "glm/gtc/type_ptr.hpp"
 #include "shader.h"
 #include "render_helper.h"
 #include "base_render.h"
@@ -152,6 +153,7 @@ Scene::~Scene() {
 }
 
 void Scene::addLightSource(const shared_ptr<BaseRender> &lightModel) {
-    lightSource = static_pointer_cast<BaseRenderImpl>(lightModel);
+    lightSource = dynamic_pointer_cast<BaseRenderImpl>(lightModel);
+    assert(lightSource != nullptr);
     lightSource->initRender();
 }
