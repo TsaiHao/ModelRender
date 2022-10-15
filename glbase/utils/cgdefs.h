@@ -11,12 +11,16 @@ using WindowType = GLFWwindow*;
 using WindowType = void*;
 #endif
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #define GL_WINDOW_WIDTH (800)
 #define GL_WINDOW_HEIGHT (800)
 
 #define VPTR(x) (glm::value_ptr(x))
 
-#define FLOAT_EQUAL(x, y) (abs(x - y) < 1e6)
+#define FLOAT_EQUAL(x, y) (abs(x - y) < 1e-6)
 
 #define LOG_TAG "GLBASE"
 

@@ -9,20 +9,15 @@
 
 using namespace std;
 
+FT_Library ft;
+GLuint textureId;
+
 int initFreeType() {
-    FT_Library ft;
     int error;
 
     error = FT_Init_FreeType(&ft);
     if (error) {
         Logger::error("init freetype failed %d", error);
-        exit(1);
-    }
-
-    FT_Face face;
-    error = FT_New_Face(ft, "resource/font/DejaVuSansMono.ttf", 0, &face);
-    if (error) {
-        Logger::error("load face failed %d", error);
         exit(1);
     }
 
@@ -87,10 +82,48 @@ PolygonRender::PolygonRender(GeometryType pType): type(pType) {
     } else if (type == GeometryType::Circle) {
         vertices = PolygonFactory::createDefaultCircle();
     }
+
+
+    initFreeType();
+	
+    FT_Face face;
+    int error = FT_New_Face(ft, "resource/font/DejaVuSansMono.ttf", 0, &face);
+    if (error) {
+        Logger::error("load face failed %d", error);
+        exit(1);
+    }
+
+    FT_Set_Pixel_Sizes(face, 0, 40);
+    error = FT_Load_Char(face, 'X', FT_LOAD_RENDER);
+    if (error) {
+        Logger::error("load char failed %d", error);
+        exit(1);
+    }
+
+
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    glTexImage2D(
+        GL_TEXTURE_2D,
+        0,
+        GL_RED,
+        face->glyph->bitmap.width,
+        face->glyph->bitmap.rows,
+        0,
+        GL_RED,
+        GL_UNSIGNED_BYTE,
+        face->glyph->bitmap.buffer
+    );
+    // 设置纹理选项
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 }
 
 void PolygonRender::initRender() {
-    initFreeType();
+
     initGL();
 }
 
@@ -100,6 +133,10 @@ void PolygonRender::draw() {
     if (animator) {
         animator->doProcess();
     }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    shader->setInt(TEXTURE_UNIFORM, 0);
 
     glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size() / 5);
     _glCheckError();

@@ -50,7 +50,9 @@ add_library(
         ${MESH_LOADER_FILES}
 )
 
-target_compile_options(${LIB_NAME} PRIVATE "-Wno-deprecated-volatile")
+if (NOT MSVC)
+    target_compile_options(${LIB_NAME} PRIVATE "-Wno-deprecated-volatile")
+endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Android")
     find_library(log-lib log)
@@ -62,8 +64,12 @@ else()
 endif()
 
 set(FREE_TYPE_INCLUDE_DIR "")
+set(FREE_TYPE_LINK_LIB "freetype")
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     set(FREE_TYPE_INCLUDE_DIR "/usr/include/freetype2")
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+	set(FREE_TYPE_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}/thirdparty/freetype2/include")
+    set(FREE_TYPE_LINK_LIB "${CMAKE_CURRENT_LIST_DIR}/thirdparty/freetype2/lib/freetype.lib")
 endif()
 
 target_include_directories(
@@ -76,7 +82,7 @@ target_include_directories(
 target_link_libraries(
     ${LIB_NAME} PUBLIC
     cg3rd
-    freetype
+    ${FREE_TYPE_LINK_LIB}
 )
 
 if (${ENABLE_BUILD_TEST})

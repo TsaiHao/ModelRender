@@ -7,3 +7,5 @@ glm
 .gitignore
 .vscode
 CMakeLists.txt.user
+.vs/
+CMakeSettings.json

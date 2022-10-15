@@ -3,8 +3,8 @@ in mediump vec3 vertNorm;
 
 in mediump vec4 fragPos;
 out mediump vec4 glColor;
-uniform mediump vec4 lightPos;
+uniform mediump sampler2D texture1;
 
 void main() {
-    glColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    glColor = texture(texture1, texCoord.xy);
 }
